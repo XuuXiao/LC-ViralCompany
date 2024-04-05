@@ -21,8 +21,6 @@ namespace ViralCompany {
         private void Awake() {
             Logger = base.Logger;
             // This should be ran before Network Prefabs are registered.
-            InitializeNetworkBehaviours();
-
             Assets.PopulateAssets();
             ModConfig = new ViralCompanyConfig(this.Config); // Create the config with the file from here.
 
@@ -34,9 +32,9 @@ namespace ViralCompany {
             TerminalNode cTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("cTerminalNode");
             RegisterShopItemWithConfig(ModConfig.ConfigCameraEnabled.Value, ModConfig.ConfigCameraScrapEnabled.Value, Camera, cTerminalNode, ModConfig.ConfigCameraCost.Value, ModConfig.ConfigCameraRarity.Value);
 
+            InitializeNetworkBehaviours();
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
         }
-
         private void RegisterScrapWithConfig(bool enabled, string configMoonRarity, Item scrap) {
             if (enabled) { 
                 (Dictionary<LevelTypes, int> spawnRateByLevelType, Dictionary<string, int> spawnRateByCustomLevelType) = ConfigParsing(configMoonRarity);
@@ -108,7 +106,7 @@ namespace ViralCompany {
             public static void PopulateAssets() {
                 string sAssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-                MainAssetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "viralcompanyassets"));
+                MainAssetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "viralcompanyasset"));
                 if (MainAssetBundle == null) {
                     Plugin.Logger.LogError("Failed to load custom assets.");
                     return;
