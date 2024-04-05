@@ -1,19 +1,9 @@
 fileFormatVersion: 2
-guid: 186f6dd7e585338449a0cc280aabea71
+guid: 59ea0c5681cb0794789a86848f9745a8
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Body
-    second: {fileID: 2100000, guid: c53c3e2870eb3ee4083c9734dbc88822, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: CameraFaces
-    second: {fileID: 2100000, guid: 77f5f7cbb005fe64788f310ea2d14738, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -115,5 +105,5 @@ ModelImporter:
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
-  assetBundleName: viralcompanyassets
+  assetBundleName: 
   assetBundleVariant: 

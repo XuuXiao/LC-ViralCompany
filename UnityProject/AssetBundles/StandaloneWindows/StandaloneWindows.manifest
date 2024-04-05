@@ -1,7 +1,7 @@
 ManifestFileVersion: 0
-CRC: 2998260161
+CRC: 3982394862
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: viralcompanyassets
+      Name: viralcompanyasset
       Dependencies: {}
