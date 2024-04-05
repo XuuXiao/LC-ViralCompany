@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 65817464
+CRC: 3265197330
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 224ac78143cc58478a633bb2196bc6f3
+    Hash: d6ec56e15b18f1290b399622db5403ed
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 02378aafb3385a755e859c82cbe90948
+    Hash: 4544d6c01fc8285b6f27617c0e682234
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 224ac78143cc58478a633bb2196bc6f3
+    Hash: d6ec56e15b18f1290b399622db5403ed
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -42,12 +42,18 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 95
   Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 23c1ce4fb46143f46bc5cb5224c934f6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
 - Class: 114
   Script: {fileID: -1054635122, guid: f99285952e59b614cacb9ba5ddeb17df, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0e80ae96b3eb9177eea5c8f9dadbcda1, type: 3}
 - Class: 114
@@ -74,11 +80,15 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Unity.RenderPipelines.Core.Runtime
   ClassName: UnityEngine.Rendering.BitArray128
 - AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.BoolScalableSettingValue
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
   ClassName: UnityEngine.Rendering.HighDefinition.FrameSettings
 - AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
   ClassName: UnityEngine.Rendering.HighDefinition.FrameSettingsOverrideMask
 - AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
   ClassName: UnityEngine.Rendering.HighDefinition.HDPhysicalCamera
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
 - AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
   ClassName: UnityEngine.Rendering.HighDefinition.ObsoleteFrameSettings
 - AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime

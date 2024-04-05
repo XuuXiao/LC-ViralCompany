@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements.UIR;
 
 namespace ViralCompany;
 public class Camera : GrabbableObject {
@@ -11,7 +13,12 @@ public class Camera : GrabbableObject {
     public float maxPitch;
     public AudioClip turnOnSound;
     public AudioClip turnOffSound;
+    public Animator cameraAnimator;
     public AudioClip recordingFinishedSound;
+    public Material screenMaterial;
+    public AnimationClip openCameraAnimation;
+    [NonSerialized]
+    public bool cameraOpen;
     [NonSerialized]
     public RenderTexture renderTexture;
     [NonSerialized]
@@ -31,8 +38,18 @@ public class Camera : GrabbableObject {
     public NetworkVariable<RecordState> recordState = new NetworkVariable<RecordState>(RecordState.Off, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public override void Start() {
         base.Start();
+        screenMaterial.color = Color.black;
     }
     public override void ItemActivate(bool used, bool buttonDown = true) {
+        if (cameraOpen) {
+            DoAnimationClientRpc("closeCamera");
+            screenMaterial.color = Color.black;
+            cameraOpen = false;
+        } else {
+            DoAnimationClientRpc("openCamera");
+            cameraOpen = true;
+            StartCoroutine(StartUpCamera());
+        }
         // check if its a specific button, if so, start recording/stop recording/hold camera up to face.
     }
     public void StartRecording() {
@@ -51,6 +68,11 @@ public class Camera : GrabbableObject {
         } else {
             PlaySoundServerRpc(soundID);
         }
+    }
+    IEnumerator StartUpCamera() {
+        yield return new WaitForSeconds(openCameraAnimation.length/3);
+        screenMaterial.color = Color.white;
+        StopCoroutine(StartUpCamera());
     }
 
     [ServerRpc]
@@ -90,5 +112,10 @@ public class Camera : GrabbableObject {
     }
     public void SwitchRecordState(RecordState state) {
 
+    }
+    [ClientRpc]
+    public void DoAnimationClientRpc(string animationName) {
+        LogIfDebugBuild($"Animation: {animationName}");
+        cameraAnimator.SetTrigger(animationName);
     }
 }

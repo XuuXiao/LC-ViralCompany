@@ -76,7 +76,7 @@ TagManager:
   - PlaceableShipObjects
   - PlacementBlocker
   - Railing
-  - 
+  - DecalStickableSurface
   - 
   - 
   m_SortingLayers:
