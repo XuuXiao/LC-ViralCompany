@@ -9,13 +9,16 @@ using System.Collections.Generic;
 using static LethalLib.Modules.Levels;
 using System.Linq;
 using static LethalLib.Modules.Items;
+using ViralCompany.Keybinds;
 
 namespace ViralCompany {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     [BepInDependency(LethalLib.Plugin.ModGUID)] 
+    [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin {
         internal static new ManualLogSource Logger;
         public static Item Camera;
+        internal static IngameKeybinds InputActionsInstance;
         public static ViralCompanyConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
         private void Awake() {
@@ -25,7 +28,9 @@ namespace ViralCompany {
             ModConfig = new ViralCompanyConfig(this.Config); // Create the config with the file from here.
 
 
-            // Whistle Item/Scrap
+            // Camera Item/Scrap + keybinds
+            InputActionsInstance = new IngameKeybinds();
+
             Camera = Assets.MainAssetBundle.LoadAsset<Item>("CameraObj");
             Utilities.FixMixerGroups(Camera.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Camera.spawnPrefab);

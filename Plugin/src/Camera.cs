@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements.UIR;
+using ViralCompany;
 
-namespace ViralCompany;
+namespace ViralCompany.Camera;
 public class Camera : GrabbableObject {
     public AudioSource CameraSFX;
     public float maxLoudness;
@@ -40,15 +40,31 @@ public class Camera : GrabbableObject {
         base.Start();
         screenMaterial.color = Color.black;
     }
+    public override void Update() {
+        if (!isHeld && cameraOpen) {
+            DoAnimationClientRpc("closeCamera");
+            screenMaterial.color = Color.black;
+            cameraOpen = false;
+        }
+    }
     public override void ItemActivate(bool used, bool buttonDown = true) {
+        if (Plugin.InputActionsInstance.StartRecordKey.triggered && recordState.Value == RecordState.Off && cameraOpen) {
+            StartRecording();
+            return;
+        }
+        if (Plugin.InputActionsInstance.StopRecordKey.triggered && recordState.Value != RecordState.Off && cameraOpen) {
+            
+        }
         if (cameraOpen) {
             DoAnimationClientRpc("closeCamera");
             screenMaterial.color = Color.black;
             cameraOpen = false;
+            return;
         } else {
             DoAnimationClientRpc("openCamera");
             cameraOpen = true;
             StartCoroutine(StartUpCamera());
+            return;
         }
         
         // check if its a specific button, if so, start recording/stop recording/hold camera up to face.
@@ -64,7 +80,7 @@ public class Camera : GrabbableObject {
             recordState.Value = RecordState.Finished;
             return;
         }
-        recordState.Value = RecordState.On;
+        recordState.Value = RecordState.Off;
         isRecording = false;
         //Play off sound
     }
