@@ -50,14 +50,21 @@ public class Camera : GrabbableObject {
             cameraOpen = true;
             StartCoroutine(StartUpCamera());
         }
+        
         // check if its a specific button, if so, start recording/stop recording/hold camera up to face.
     }
     public void StartRecording() {
+        recordState.Value = RecordState.On;
         isRecording = true;
         //Play on sound
     }
 
     public void StopRecording() {
+        if (insertedBattery.empty) {
+            recordState.Value = RecordState.Finished;
+            return;
+        }
+        recordState.Value = RecordState.On;
         isRecording = false;
         //Play off sound
     }

@@ -12,11 +12,11 @@ namespace ViralCompany.Configs {
         public ViralCompanyConfig(ConfigFile configFile) {
             ConfigCameraScrapEnabled = configFile.Bind("Scrap Options",
                                                 "Camera Scrap | Enabled",
-                                                true,
+                                                false,
                                                 "Enables/Disables the spawning of the scrap (sets rarity to 0 if false on all moons)");
             ConfigCameraRarity = configFile.Bind("Scrap Options",   
                                                 "Camera Scrap | Rarity",  
-                                                "Modded@5,ExperimentationLevel@5,AssuranceLevel@5,VowLevel@5,OffenseLevel@5,MarchLevel@5,RendLevel@5,DineLevel@5,TitanLevel@5", 
+                                                "Modded@1,ExperimentationLevel@1,AssuranceLevel@1,VowLevel@1,OffenseLevel@1,MarchLevel@1,RendLevel@1,DineLevel@1,TitanLevel@1", 
                                                 "Rarity of Camera scrap appearing on every moon");
             ConfigCameraEnabled = configFile.Bind("Shop Options",   
                                                 "Camera Item | Enabled",  
@@ -24,7 +24,7 @@ namespace ViralCompany.Configs {
                                                 "Enables/Disables the Camera showing up in shop");
             ConfigCameraCost = configFile.Bind("Shop Options",   
                                                 "Camera Item | Cost",  
-                                                100, 
+                                                60, 
                                                 "Cost of Camera");
             ClearUnusedEntries(configFile);
             Plugin.Logger.LogInfo("Setting up config for Viral Company plugin...");
