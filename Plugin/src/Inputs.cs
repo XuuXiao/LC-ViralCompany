@@ -7,4 +7,6 @@ public class IngameKeybinds : LcInputActions {
     public InputAction StopRecordKey { get; set; }
     [InputAction("<Keyboard>/p", Name = "StartRecord")]
     public InputAction StartRecordKey { get; set; }
+    [InputAction("<Mouse>/leftButton", Name = "OpenCloseCamera")]
+    public InputAction OpenCloseCameraKey { get; set; }
 }

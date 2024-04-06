@@ -85,6 +85,7 @@ public class CameraItem : GrabbableObject {
         DetectOpenCloseButton();
     }
     public void DetectOpenCloseButton() {
+        if (Plugin.InputActionsInstance.OpenCloseCameraKey.triggered) {}
         if (cameraOpen) {
             DoAnimationClientRpc("closeCamera");
             screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
