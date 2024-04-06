@@ -29,7 +29,7 @@ MonoBehaviour:
   highestSalePercentage: 50
   maxValue: 200
   minValue: 100
-  spawnPrefab: {fileID: 7333406844491756028, guid: fd991fdaffefbc5468657be2b4453e64,
+  spawnPrefab: {fileID: 2798520126253463446, guid: 592e3dbdda8934e4cab2107b6d6f6bc3,
     type: 3}
   requiresBattery: 0
   batteryUsage: 0
@@ -53,6 +53,7 @@ MonoBehaviour:
   toolTips:
   - 'Open/Close Camera : [LMB]'
   - 'Start Recording : [P]'
+  - 'Pause Recording : [O]'
   verticalOffset: 0.1
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1

@@ -11,20 +11,20 @@ public class Camera : GrabbableObject {
     public float minLoudness;
     public float minPitch;
     public float maxPitch;
+    public Material screenRecordingOverlay;
     public AudioClip turnOnSound;
     public AudioClip turnOffSound;
     public Animator cameraAnimator;
     public AudioClip recordingFinishedSound;
     public Material screenMaterial;
+    public TextMesh recordingTimeText;
     public AnimationClip openCameraAnimation;
     [NonSerialized]
     public bool cameraOpen;
     [NonSerialized]
     public RenderTexture renderTexture;
     [NonSerialized]
-    public bool isRecording = false;
-    [NonSerialized]
-    public int recordingTime;
+    public float recordingTime = 0;
     void LogIfDebugBuild(string text) {
       #if DEBUG
       Plugin.Logger.LogInfo(text);
@@ -46,19 +46,27 @@ public class Camera : GrabbableObject {
             screenMaterial.color = Color.black;
             cameraOpen = false;
         }
+        if (recordState.Value != RecordState.On) {
+            recordingTime += Time.deltaTime;
+            TimeSpan time = TimeSpan.FromSeconds(recordingTime);
+            recordingTimeText.text = time.ToString(@"mm\:ss\:fff");
+        }
     }
     public override void ItemActivate(bool used, bool buttonDown = true) {
         if (Plugin.InputActionsInstance.StartRecordKey.triggered && recordState.Value == RecordState.Off && cameraOpen) {
             StartRecording();
+            LogIfDebugBuild("Recording started");
             return;
         }
         if (Plugin.InputActionsInstance.StopRecordKey.triggered && recordState.Value != RecordState.Off && cameraOpen) {
-            
+            StopRecording();
+            return;
         }
         if (cameraOpen) {
             DoAnimationClientRpc("closeCamera");
             screenMaterial.color = Color.black;
             cameraOpen = false;
+            StopRecording();
             return;
         } else {
             DoAnimationClientRpc("openCamera");
@@ -71,7 +79,6 @@ public class Camera : GrabbableObject {
     }
     public void StartRecording() {
         recordState.Value = RecordState.On;
-        isRecording = true;
         //Play on sound
     }
 
@@ -81,7 +88,6 @@ public class Camera : GrabbableObject {
             return;
         }
         recordState.Value = RecordState.Off;
-        isRecording = false;
         //Play off sound
     }
 
