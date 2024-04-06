@@ -24,7 +24,7 @@ MonoBehaviour:
   itemSpawnsOnGround: 1
   isConductiveMetal: 1
   isScrap: 1
-  creditsWorth: 10
+  creditsWorth: 0
   lockedInDemo: 0
   highestSalePercentage: 50
   maxValue: 200

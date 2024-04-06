@@ -4,8 +4,8 @@ using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
 
-namespace ViralCompany.Camera;
-public class Camera : GrabbableObject {
+namespace ViralCompany.CameraScrap;
+public class CameraItem : GrabbableObject {
     public AudioSource CameraSFX;
     public float maxLoudness;
     public float minLoudness;
@@ -16,7 +16,10 @@ public class Camera : GrabbableObject {
     public AudioClip turnOffSound;
     public Animator cameraAnimator;
     public AudioClip recordingFinishedSound;
+    [NonSerialized]
     public Material screenMaterial;
+    [NonSerialized]
+    public Transform screenTransform;
     public TextMesh recordingTimeText;
     public AnimationClip openCameraAnimation;
     [NonSerialized]
@@ -37,17 +40,39 @@ public class Camera : GrabbableObject {
     public NetworkVariable<RecordState> recordState = new NetworkVariable<RecordState>(RecordState.Off, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public override void Start() {
         base.Start();
-        screenMaterial.color = Color.black;
+
+        Material newMaterial = new Material(Shader.Find("HDRP/Lit"));
+        newMaterial.color = Color.white;
+
+        renderTexture = new RenderTexture(256, 256, 0);
+
+        Camera cameraComponent = this.transform.Find("Camera").GetComponent<Camera>();
+        cameraComponent.targetTexture = renderTexture;
+
+        newMaterial.mainTexture = renderTexture;
+
+        screenTransform = this.transform.Find("Armature").Find("Bone").Find("Bone.001").Find("Bone.001_end").Find("Screen");
+        if (screenTransform != null) {
+            MeshRenderer screenMeshRenderer = screenTransform.GetComponent<MeshRenderer>();
+            screenMaterial = screenTransform.GetComponent<MeshRenderer>().material;
+            if (screenMeshRenderer != null) {
+                screenMeshRenderer.material = newMaterial;
+            } else {
+                LogIfDebugBuild("MeshRenderer not found on 'Screen' GameObject.");
+            }
+        } else {
+            LogIfDebugBuild("'Screen' GameObject not found in the hierarchy.");
+        }
+        screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
     }
     public override void Update() {
         base.Update();
         if (!isHeld && cameraOpen) {
             DoAnimationClientRpc("closeCamera");
-            screenMaterial.color = Color.black;
+            screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
             cameraOpen = false;
             if (recordState.Value == RecordState.On) {
                 StopRecording();
-
             }
         }
         if (recordState.Value == RecordState.On) {
@@ -62,8 +87,9 @@ public class Camera : GrabbableObject {
         base.ItemActivate(used, buttonDown);
         if (cameraOpen) {
             DoAnimationClientRpc("closeCamera");
-            screenMaterial.color = Color.black;
+            screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
             cameraOpen = false;
+            StartCoroutine(PowerDownCamera());
             StopRecording();
             return;
         } else {
@@ -117,8 +143,13 @@ public class Camera : GrabbableObject {
     }
     IEnumerator StartUpCamera() {
         yield return new WaitForSeconds(openCameraAnimation.length/3);
-        screenMaterial.color = Color.white;
+        screenTransform.GetComponent<MeshRenderer>().material.color = Color.white;
         StopCoroutine(StartUpCamera());
+    }
+    IEnumerator PowerDownCamera() {
+        yield return new WaitForSeconds(openCameraAnimation.length/3);
+        screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
+        StopCoroutine(PowerDownCamera());
     }
 
     [ServerRpc]
