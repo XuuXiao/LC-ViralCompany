@@ -23,6 +23,8 @@ public class CameraItem : GrabbableObject {
     public Transform screenTransform;
     public AnimationClip openCameraAnimation;
     [NonSerialized]
+    public bool cooldownPassed = true;
+    [NonSerialized]
     public bool cameraOpen;
     public RenderTexture renderTexture;
     [NonSerialized]
@@ -85,17 +87,21 @@ public class CameraItem : GrabbableObject {
         DetectOpenCloseButton();
     }
     public void DetectOpenCloseButton() {
-        if (Plugin.InputActionsInstance.OpenCloseCameraKey.triggered) {
+        if (Plugin.InputActionsInstance.OpenCloseCameraKey.triggered && cooldownPassed) {
             if (cameraOpen) {
                 DoAnimationClientRpc("closeCamera");
                 screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
                 cameraOpen = false;
+                cooldownPassed = false;
                 StopRecording();
+                StartCoroutine(CooldownPassing());
                 return;
             } else {
                 DoAnimationClientRpc("openCamera");
                 cameraOpen = true;
+                cooldownPassed = false;
                 StartCoroutine(StartUpCamera());
+                StartCoroutine(CooldownPassing());
                 return;
             }
         }
@@ -122,7 +128,7 @@ public class CameraItem : GrabbableObject {
     }
 
     public void StopRecording() {
-        if (insertedBattery.empty) {
+        if (insertedBattery.charge <= 0) {
             recordState.Value = RecordState.Finished;
             LogIfDebugBuild("Recording finished");
             return;
@@ -148,7 +154,11 @@ public class CameraItem : GrabbableObject {
         screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
         StopCoroutine(PowerDownCamera());
     }
-
+    IEnumerator CooldownPassing() {
+        yield return new WaitForSeconds(3.2f);
+        cooldownPassed = true;
+        StopCoroutine(CooldownPassing());
+    }
     [ServerRpc]
     public void PlaySoundServerRpc(string sound) {
         PlaySoundClientRpc(sound);
