@@ -868,7 +868,7 @@ MonoBehaviour:
   itemProperties: {fileID: 11400000, guid: 561bed460eab8a7458ac09033ce39e9d, type: 2}
   insertedBattery:
     empty: 0
-    charge: 0
+    charge: 1
   customGrabTooltip: 
   propBody: {fileID: 0}
   propColliders: []

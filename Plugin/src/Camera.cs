@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
@@ -20,7 +21,6 @@ public class CameraItem : GrabbableObject {
     public Material screenMaterial;
     [NonSerialized]
     public Transform screenTransform;
-    public TextMesh recordingTimeText;
     public AnimationClip openCameraAnimation;
     [NonSerialized]
     public bool cameraOpen;
@@ -70,15 +70,14 @@ public class CameraItem : GrabbableObject {
         if (!isHeld && cameraOpen) {
             DoAnimationClientRpc("closeCamera");
             screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
+            StartCoroutine(PowerDownCamera());
             cameraOpen = false;
             if (recordState.Value == RecordState.On) {
                 StopRecording();
             }
         }
-        if (recordState.Value == RecordState.On) {
+        if (recordState.Value == RecordState.On && playerHeldBy == GameNetworkManager.Instance.localPlayerController) {
             recordingTime += Time.deltaTime;
-            TimeSpan time = TimeSpan.FromSeconds(recordingTime);
-            recordingTimeText.text = time.ToString(@"mm\:ss\:fff");
         }
         DetectOffRecordButton();
         DetectOnRecordButton();
@@ -89,7 +88,6 @@ public class CameraItem : GrabbableObject {
             DoAnimationClientRpc("closeCamera");
             screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
             cameraOpen = false;
-            StartCoroutine(PowerDownCamera());
             StopRecording();
             return;
         } else {
@@ -98,11 +96,10 @@ public class CameraItem : GrabbableObject {
             StartCoroutine(StartUpCamera());
             return;
         }
-        
         // check if its a specific button, if so, start recording/stop recording/hold camera up to face.
     }
     public void DetectOnRecordButton() {
-        if (!isHeld) return;
+        if (!isHeld || playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
         if (Plugin.InputActionsInstance.StartRecordKey.triggered && recordState.Value == RecordState.Off && cameraOpen) {
             StartRecording();
             LogIfDebugBuild("Recording started");
@@ -111,8 +108,8 @@ public class CameraItem : GrabbableObject {
         return;
     }
     public void DetectOffRecordButton() {
-        if (!isHeld) return;
-        if (Plugin.InputActionsInstance.StopRecordKey.triggered && recordState.Value != RecordState.Off && cameraOpen) {
+        if (!isHeld && playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
+        if (Plugin.InputActionsInstance.StopRecordKey.triggered && recordState.Value == RecordState.On && cameraOpen) {
             StopRecording();
             LogIfDebugBuild("Recording Stopped");
             return;
@@ -120,16 +117,16 @@ public class CameraItem : GrabbableObject {
         return;
     }
     public void StartRecording() {
-        recordState.Value = RecordState.On;
+        recordState.Value = RecordState.On;        
         //Play on sound
     }
 
     public void StopRecording() {
-        /*if (insertedBattery.empty) {
+        if (insertedBattery.empty) {
             recordState.Value = RecordState.Finished;
             LogIfDebugBuild("Recording finished");
             return;
-        }*/
+        }
         recordState.Value = RecordState.Off;
         //Play off sound
     }

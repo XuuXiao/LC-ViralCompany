@@ -18,7 +18,7 @@ MonoBehaviour:
   twoHanded: 0
   twoHandedAnimation: 0
   canBeGrabbedBeforeGameStart: 1
-  weight: 0
+  weight: 1.1
   itemIsTrigger: 1
   holdButtonUse: 0
   itemSpawnsOnGround: 1
@@ -31,9 +31,9 @@ MonoBehaviour:
   minValue: 100
   spawnPrefab: {fileID: 2798520126253463446, guid: 592e3dbdda8934e4cab2107b6d6f6bc3,
     type: 3}
-  requiresBattery: 0
-  batteryUsage: 0
-  automaticallySetUsingPower: 0
+  requiresBattery: 1
+  batteryUsage: 50
+  automaticallySetUsingPower: 1
   itemIcon: {fileID: 0}
   grabAnim: 
   useAnim: 
