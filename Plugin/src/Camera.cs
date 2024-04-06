@@ -21,7 +21,6 @@ public class Camera : GrabbableObject {
     public AnimationClip openCameraAnimation;
     [NonSerialized]
     public bool cameraOpen;
-    [NonSerialized]
     public RenderTexture renderTexture;
     [NonSerialized]
     public float recordingTime = 0;
@@ -41,27 +40,26 @@ public class Camera : GrabbableObject {
         screenMaterial.color = Color.black;
     }
     public override void Update() {
+        base.Update();
         if (!isHeld && cameraOpen) {
             DoAnimationClientRpc("closeCamera");
             screenMaterial.color = Color.black;
             cameraOpen = false;
+            if (recordState.Value == RecordState.On) {
+                StopRecording();
+
+            }
         }
-        if (recordState.Value != RecordState.On) {
+        if (recordState.Value == RecordState.On) {
             recordingTime += Time.deltaTime;
             TimeSpan time = TimeSpan.FromSeconds(recordingTime);
             recordingTimeText.text = time.ToString(@"mm\:ss\:fff");
         }
+        DetectOffRecordButton();
+        DetectOnRecordButton();
     }
     public override void ItemActivate(bool used, bool buttonDown = true) {
-        if (Plugin.InputActionsInstance.StartRecordKey.triggered && recordState.Value == RecordState.Off && cameraOpen) {
-            StartRecording();
-            LogIfDebugBuild("Recording started");
-            return;
-        }
-        if (Plugin.InputActionsInstance.StopRecordKey.triggered && recordState.Value != RecordState.Off && cameraOpen) {
-            StopRecording();
-            return;
-        }
+        base.ItemActivate(used, buttonDown);
         if (cameraOpen) {
             DoAnimationClientRpc("closeCamera");
             screenMaterial.color = Color.black;
@@ -77,16 +75,35 @@ public class Camera : GrabbableObject {
         
         // check if its a specific button, if so, start recording/stop recording/hold camera up to face.
     }
+    public void DetectOnRecordButton() {
+        if (!isHeld) return;
+        if (Plugin.InputActionsInstance.StartRecordKey.triggered && recordState.Value == RecordState.Off && cameraOpen) {
+            StartRecording();
+            LogIfDebugBuild("Recording started");
+            return;
+        }
+        return;
+    }
+    public void DetectOffRecordButton() {
+        if (!isHeld) return;
+        if (Plugin.InputActionsInstance.StopRecordKey.triggered && recordState.Value != RecordState.Off && cameraOpen) {
+            StopRecording();
+            LogIfDebugBuild("Recording Stopped");
+            return;
+        }
+        return;
+    }
     public void StartRecording() {
         recordState.Value = RecordState.On;
         //Play on sound
     }
 
     public void StopRecording() {
-        if (insertedBattery.empty) {
+        /*if (insertedBattery.empty) {
             recordState.Value = RecordState.Finished;
+            LogIfDebugBuild("Recording finished");
             return;
-        }
+        }*/
         recordState.Value = RecordState.Off;
         //Play off sound
     }

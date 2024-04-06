@@ -32,10 +32,10 @@ namespace ViralCompany {
             InputActionsInstance = new IngameKeybinds();
 
             Camera = Assets.MainAssetBundle.LoadAsset<Item>("CameraObj");
-            Utilities.FixMixerGroups(Camera.spawnPrefab);
-            NetworkPrefabs.RegisterNetworkPrefab(Camera.spawnPrefab);
-            TerminalNode cTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("cTerminalNode");
-            RegisterShopItemWithConfig(ModConfig.ConfigCameraEnabled.Value, ModConfig.ConfigCameraScrapEnabled.Value, Camera, cTerminalNode, ModConfig.ConfigCameraCost.Value, ModConfig.ConfigCameraRarity.Value);
+            // Utilities.FixMixerGroups(Camera.spawnPrefab);
+            // NetworkPrefabs.RegisterNetworkPrefab(Camera.spawnPrefab);
+            // TerminalNode cTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("cTerminalNode");
+            // RegisterShopItemWithConfig(ModConfig.ConfigCameraEnabled.Value, ModConfig.ConfigCameraScrapEnabled.Value, Camera, cTerminalNode, ModConfig.ConfigCameraCost.Value, ModConfig.ConfigCameraRarity.Value);
 
             InitializeNetworkBehaviours();
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");

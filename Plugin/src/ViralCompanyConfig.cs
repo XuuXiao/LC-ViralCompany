@@ -6,24 +6,14 @@ using BepInEx.Configuration;
 namespace ViralCompany.Configs {
     public class ViralCompanyConfig {
         public ConfigEntry<int> ConfigCameraCost { get; private set; }
-        public ConfigEntry<bool> ConfigCameraEnabled { get; private set; }
-        public ConfigEntry<string> ConfigCameraRarity { get; private set; }
-        public ConfigEntry<bool> ConfigCameraScrapEnabled { get; private set; }        
+        public ConfigEntry<bool> ConfigCameraShipUpgradeEnabled { get; private set; }        
         public ViralCompanyConfig(ConfigFile configFile) {
-            ConfigCameraScrapEnabled = configFile.Bind("Scrap Options",
+            ConfigCameraShipUpgradeEnabled = configFile.Bind("Scrap Options",
                                                 "Camera Scrap | Enabled",
-                                                false,
-                                                "Enables/Disables the spawning of the scrap (sets rarity to 0 if false on all moons)");
-            ConfigCameraRarity = configFile.Bind("Scrap Options",   
-                                                "Camera Scrap | Rarity",  
-                                                "Modded@1,ExperimentationLevel@1,AssuranceLevel@1,VowLevel@1,OffenseLevel@1,MarchLevel@1,RendLevel@1,DineLevel@1,TitanLevel@1", 
-                                                "Rarity of Camera scrap appearing on every moon");
-            ConfigCameraEnabled = configFile.Bind("Shop Options",   
-                                                "Camera Item | Enabled",  
-                                                true, 
-                                                "Enables/Disables the Camera showing up in shop");
-            ConfigCameraCost = configFile.Bind("Shop Options",   
-                                                "Camera Item | Cost",  
+                                                true,
+                                                "Enables/Disables the Camera from being a Ship Upgrade");
+            ConfigCameraCost = configFile.Bind("Shop Options",
+                                                "Camera ShipUpgrade | Cost",  
                                                 60, 
                                                 "Cost of Camera");
             ClearUnusedEntries(configFile);
