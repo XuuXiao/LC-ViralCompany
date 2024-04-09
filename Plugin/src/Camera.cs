@@ -13,8 +13,9 @@ public class CameraItem : GrabbableObject {
     public float minPitch;
     public float maxPitch;
     public Material screenRecordingOverlay;
-    public AudioClip turnOnSound;
-    public AudioClip turnOffSound;
+    public AudioClip startRecordSound;
+    public AudioClip endRecordSound;
+    public AudioClip errorSound;
     public Animator cameraAnimator;
     public AudioClip recordingFinishedSound;
     [NonSerialized]
@@ -40,6 +41,7 @@ public class CameraItem : GrabbableObject {
         Finished,
     }
     public NetworkVariable<RecordState> recordState = new NetworkVariable<RecordState>(RecordState.Off, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public override void ItemActivate(bool used, bool buttonDown = true) { }
     public override void Start() {
         base.Start();
 
@@ -69,6 +71,9 @@ public class CameraItem : GrabbableObject {
     }
     public override void Update() {
         base.Update();
+        if (recordState.Value == RecordState.Off || recordState.Value == RecordState.Finished) {
+            isBeingUsed = false;
+        }
         if (!isHeld && cameraOpen) {
             DoAnimationClientRpc("closeCamera");
             screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
@@ -81,14 +86,18 @@ public class CameraItem : GrabbableObject {
         if (recordState.Value == RecordState.On && playerHeldBy == GameNetworkManager.Instance.localPlayerController) {
             recordingTime += Time.deltaTime;
         }
-        if (!isHeld && playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
+        if (!isHeld || playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
+        if (insertedBattery.charge <= 0) {
+            StopRecording();
+        }
         DetectOffRecordButton();
         DetectOnRecordButton();
         DetectOpenCloseButton();
+        LogIfDebugBuild(recordState.Value.ToString());
     }
     public void DetectOpenCloseButton() {
         if (Plugin.InputActionsInstance.OpenCloseCameraKey.triggered && cooldownPassed) {
-            if (cameraOpen) {
+            if (cameraOpen && cooldownPassed) {
                 DoAnimationClientRpc("closeCamera");
                 screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
                 cameraOpen = false;
@@ -96,7 +105,7 @@ public class CameraItem : GrabbableObject {
                 StopRecording();
                 StartCoroutine(CooldownPassing());
                 return;
-            } else {
+            } else if (cooldownPassed) {
                 DoAnimationClientRpc("openCamera");
                 cameraOpen = true;
                 cooldownPassed = false;
@@ -123,17 +132,23 @@ public class CameraItem : GrabbableObject {
         return;
     }
     public void StartRecording() {
-        recordState.Value = RecordState.On;        
+        recordState.Value = RecordState.On;
+        PlaySoundByID("startRecord");
+        isBeingUsed = true;
         //Play on sound
     }
 
     public void StopRecording() {
         if (insertedBattery.charge <= 0) {
             recordState.Value = RecordState.Finished;
+            PlaySoundByID("recordingFinished");
             LogIfDebugBuild("Recording finished");
+            isBeingUsed = false;
             return;
         }
         recordState.Value = RecordState.Off;
+        PlaySoundByID("stopRecord");
+        isBeingUsed = false;
         //Play off sound
     }
 
@@ -143,6 +158,15 @@ public class CameraItem : GrabbableObject {
         } else {
             PlaySoundServerRpc(soundID);
         }
+    }
+    public void StartClip() {
+        //run this if they have a battery and press start record
+    }
+    public void EndClip() {
+        //run this when they turn off the recorder or pause a recording or when battery dies
+    }
+    public void MergeClips() {
+        //prolly a foreach loop done when the camera's battery dies (potentially could add a button to do it earlier)
     }
     IEnumerator StartUpCamera() {
         yield return new WaitForSeconds(openCameraAnimation.length/3);
@@ -155,9 +179,13 @@ public class CameraItem : GrabbableObject {
         StopCoroutine(PowerDownCamera());
     }
     IEnumerator CooldownPassing() {
-        yield return new WaitForSeconds(3.2f);
+        yield return new WaitForSeconds(2f);
         cooldownPassed = true;
         StopCoroutine(CooldownPassing());
+    }
+    public override void ChargeBatteries()
+    {
+        base.ChargeBatteries();
     }
     [ServerRpc]
     public void PlaySoundServerRpc(string sound) {
@@ -172,20 +200,20 @@ public class CameraItem : GrabbableObject {
     public void PlaySound(string soundID) {
         LogIfDebugBuild("Playing target switch sound");
 
-        AudioClip sound = null;
-
+        AudioClip sound;
         switch (soundID)
         {
-            case "turnOn":
-                sound = turnOnSound;
+            case "startRecord":
+                sound = startRecordSound;
                 break;
-            case "turnOff":
-                sound = turnOffSound;
+            case "endRecord":
+                sound = endRecordSound;
                 break;
             case "recordingFinished":
                 sound = recordingFinishedSound;
                 break;
             default:
+                sound = errorSound;
                 return;
         }
 
@@ -193,9 +221,6 @@ public class CameraItem : GrabbableObject {
 
         WalkieTalkie.TransmitOneShotAudio(CameraSFX, sound, 1);
         RoundManager.Instance.PlayAudibleNoise(transform.position, 10, 1, 0, isInShipRoom && StartOfRound.Instance.hangarDoorsClosed);
-    }
-    public void SwitchRecordState(RecordState state) {
-
     }
     [ClientRpc]
     public void DoAnimationClientRpc(string animationName) {

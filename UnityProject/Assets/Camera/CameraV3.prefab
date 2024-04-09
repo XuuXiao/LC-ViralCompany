@@ -375,7 +375,7 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 20.78461
+  m_FocalLength: 28.970562
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -1386,7 +1386,7 @@ MonoBehaviour:
   isInElevator: 0
   isInShipRoom: 0
   isInFactory: 1
-  useCooldown: 3.2
+  useCooldown: 2
   currentUseCooldown: 0
   itemProperties: {fileID: 11400000, guid: 561bed460eab8a7458ac09033ce39e9d, type: 2}
   insertedBattery:

@@ -19,10 +19,10 @@ MonoBehaviour:
   twoHandedAnimation: 0
   canBeGrabbedBeforeGameStart: 1
   weight: 1.1
-  itemIsTrigger: 1
+  itemIsTrigger: 0
   holdButtonUse: 0
   itemSpawnsOnGround: 1
-  isConductiveMetal: 1
+  isConductiveMetal: 0
   isScrap: 1
   creditsWorth: 0
   lockedInDemo: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
   spawnPrefab: {fileID: 4411715277210552296, guid: 09eefe3d2d42aaa48aac2f41f13198ad,
     type: 3}
   requiresBattery: 1
-  batteryUsage: 50
+  batteryUsage: 100
   automaticallySetUsingPower: 1
   itemIcon: {fileID: 0}
   grabAnim: 
