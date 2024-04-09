@@ -53,7 +53,7 @@ public class CameraItem : GrabbableObject {
 
         newMaterial.mainTexture = renderTexture;
 
-        screenTransform = this.transform.Find("Armature").Find("Bone").Find("Bone.001").Find("Bone.001_end").Find("Screen");
+        screenTransform = this.transform.Find("Armature").Find("Bone").Find("Bone.001").Find("Bone.002").Find("Bone.003").Find("Bone.004").Find("Bone.004_end").Find("Screen");
         if (screenTransform != null) {
             MeshRenderer screenMeshRenderer = screenTransform.GetComponent<MeshRenderer>();
             screenMaterial = screenTransform.GetComponent<MeshRenderer>().material;

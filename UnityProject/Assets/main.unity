@@ -408,7 +408,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
@@ -432,7 +432,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1001 &1317818667
+--- !u!1001 &1791728507
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -498,7 +498,7 @@ PrefabInstance:
     - target: {fileID: 4398003292345476328, guid: 592e3dbdda8934e4cab2107b6d6f6bc3,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 517136749
+      value: 3597014640
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -511,4 +511,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 124669753}
   - {fileID: 360013569}
-  - {fileID: 1317818667}
+  - {fileID: 1791728507}

@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 59ea0c5681cb0794789a86848f9745a8
+guid: a37103fa65c6aa548957f2be84cc030b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MatCamera
+    second: {fileID: 2100000, guid: 9a1483d3cc462894e835655dcaa92369, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -105,5 +110,5 @@ ModelImporter:
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
-  assetBundleName: viralcompanyasset
+  assetBundleName: 
   assetBundleVariant: 

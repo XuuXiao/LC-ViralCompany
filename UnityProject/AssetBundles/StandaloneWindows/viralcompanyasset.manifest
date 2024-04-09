@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1872003130
+CRC: 1295094800
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 70bc6fb0052ff8d598545fcca1c16985
+    Hash: 67a4920cb603bc7c34685f9fdacdc8bb
   TypeTreeHash:
     serializedVersion: 2
-    Hash: fbae264e583d6773e4a703d1f39bb180
+    Hash: 51a176e300291f5a54e2d739292612ca
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 70bc6fb0052ff8d598545fcca1c16985
+    Hash: 67a4920cb603bc7c34685f9fdacdc8bb
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -21,6 +21,8 @@ ClassTypes:
 - Class: 21
   Script: {instanceID: 0}
 - Class: 23
+  Script: {instanceID: 0}
+- Class: 28
   Script: {instanceID: 0}
 - Class: 33
   Script: {instanceID: 0}
@@ -49,6 +51,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
 - Class: 114
+  Script: {fileID: 631870583, guid: f99285952e59b614cacb9ba5ddeb17df, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
@@ -58,8 +62,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
-- Class: 114
-  Script: {fileID: 631870583, guid: f99285952e59b614cacb9ba5ddeb17df, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
@@ -96,6 +98,6 @@ SerializeReferenceClassIdentifiers:
 Assets:
 - Assets/Camera/TerminalNode/cTerminalNode.asset
 - Assets/Camera/CameraObj.asset
-- Assets/Camera/CameraScrap.prefab
-- Assets/Camera/Models/camera1.fbx
+- Assets/Camera/CameraV3.prefab
+- Assets/Camera/CameraAnimator.controller
 Dependencies: []
