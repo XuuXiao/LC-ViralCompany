@@ -47,6 +47,7 @@ internal class RecordedClip {
         await FFmpegEncoder.ConvertFramesToVideo(framesReadyForEncoding, FilePath);
 
         IsValid = true;
+        frames.Clear(); // clear frames for memory savings
     }
 
     List<byte[]> BreakIntoChunks() {

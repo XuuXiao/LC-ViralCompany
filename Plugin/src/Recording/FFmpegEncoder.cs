@@ -16,7 +16,9 @@ internal static class FFmpegEncoder {
 
     public static async Task ConvertFramesToVideo(List<Texture2DVideoFrame> frames, string outputFile) {
         await FFMpegArguments
-            .FromPipeInput(new RawVideoPipeSource(frames))
+            .FromPipeInput(new RawVideoPipeSource(frames) {
+                FrameRate = VideoRecorder.Framerate
+            })
             .OutputToFile(outputFile)
             .ProcessAsynchronously();
     }

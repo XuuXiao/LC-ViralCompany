@@ -62,7 +62,7 @@ public class CameraItem : GrabbableObject {
         Material newMaterial = new Material(Shader.Find("HDRP/Lit"));
         newMaterial.color = Color.white;
 
-        renderTexture = new RenderTexture(256, 256, 0);
+        renderTexture = new RenderTexture(350, 350, 0);
 
         Camera cameraComponent = this.transform.Find("Camera").GetComponent<Camera>();
         cameraComponent.targetTexture = renderTexture;
