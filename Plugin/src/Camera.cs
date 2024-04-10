@@ -5,7 +5,6 @@ using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
 using ViralCompany.Recording;
-using ViralCompany.src.Recording;
 using ViralCompany.Util;
 
 namespace ViralCompany.CameraScrap;
@@ -122,23 +121,24 @@ public class CameraItem : GrabbableObject {
         }
     }
     public void DetectOpenCloseButton() {
-        if (Plugin.InputActionsInstance.OpenCloseCameraKey.triggered && cooldownPassed) {
-            if (cameraOpen && cooldownPassed) {
-                DoAnimationClientRpc("closeCamera");
-                screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
-                cameraOpen = false;
-                cooldownPassed = false;
-                StopRecording();
-                StartCoroutine(CooldownPassing());
-                return;
-            } else if (cooldownPassed) {
-                DoAnimationClientRpc("openCamera");
-                cameraOpen = true;
-                cooldownPassed = false;
-                StartCoroutine(StartUpCamera());
-                StartCoroutine(CooldownPassing());
-                return;
-            }
+        if(!Plugin.InputActionsInstance.OpenCloseCameraKey.triggered) return;
+        //if(!cooldownPassed) return;
+
+        if (cameraOpen) {
+            DoAnimationClientRpc("closeCamera");
+            screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
+            cameraOpen = false;
+            cooldownPassed = false;
+            StopRecording();
+            StartCoroutine(CooldownPassing());
+            return;
+        } else {
+            DoAnimationClientRpc("openCamera");
+            cameraOpen = true;
+            cooldownPassed = false;
+            StartCoroutine(StartUpCamera());
+            StartCoroutine(CooldownPassing());
+            return;
         }
     }
     public void DetectOnRecordButton() {
@@ -180,7 +180,7 @@ public class CameraItem : GrabbableObject {
         //Play off sound
 
         RecordedClip recorded = Recorder.EndClip();
-        VideoUploader.Instance.UploadClip(recorded);
+        // VideoUploader.Instance.UploadClip(recorded);
     }
 
     public void PlaySoundByID(string soundID) {

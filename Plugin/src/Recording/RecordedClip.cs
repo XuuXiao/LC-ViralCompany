@@ -31,6 +31,7 @@ internal class RecordedClip {
     public void AddFrame(Texture2D frame) {
         if(frames == null) {
             Plugin.Logger.LogDebug("Inited RecordedClip for recording.");
+            frames = [];
         }
 
         frames.Add(frame);

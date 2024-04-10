@@ -10,6 +10,9 @@ using static LethalLib.Modules.Levels;
 using System.Linq;
 using static LethalLib.Modules.Items;
 using ViralCompany.Keybinds;
+using YoutubeDLSharp;
+using ViralCompany.Recording;
+using FFMpegCore;
 
 namespace ViralCompany {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -21,12 +24,18 @@ namespace ViralCompany {
         internal static IngameKeybinds InputActionsInstance;
         public static ViralCompanyConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
-        private void Awake() {
+        private async void Awake() {
             Logger = base.Logger;
             // This should be ran before Network Prefabs are registered.
             Assets.PopulateAssets();
             ModConfig = new ViralCompanyConfig(this.Config); // Create the config with the file from here.
 
+            Logger.LogInfo("Ensuring FFmpeg is installed.");
+            if(!File.Exists(Path.Combine(FFmpegEncoder.FFmpegInstallPath, "ffmpeg.exe"))) {
+                Directory.CreateDirectory(FFmpegEncoder.FFmpegInstallPath);
+                await YoutubeDLSharp.Utils.DownloadFFmpeg(FFmpegEncoder.FFmpegInstallPath);
+            }
+            GlobalFFOptions.Configure(options => options.BinaryFolder = FFmpegEncoder.FFmpegInstallPath);
 
             // Camera Item/Scrap + keybinds
             InputActionsInstance = new IngameKeybinds();

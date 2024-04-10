@@ -8,7 +8,7 @@ using ViralCompany.Recording;
 
 namespace ViralCompany.Recording;
 internal class RecordedVideo {
-    Dictionary<string, RecordedClip> Clips;
+    Dictionary<string, RecordedClip> Clips = [];
 
     public string VideoID { get; private set; }
     public string FolderPath { get {
