@@ -6,6 +6,7 @@ using UnityEngine;
 using ViralCompany;
 using ViralCompany.Recording;
 using ViralCompany.src.Recording;
+using ViralCompany.Util;
 
 namespace ViralCompany.CameraScrap;
 public class CameraItem : GrabbableObject {
@@ -47,6 +48,8 @@ public class CameraItem : GrabbableObject {
 
     // MAKE SURE TO RESET THIS WHEN EXTRACED.
     internal VideoRecorder Recorder { get; private set; }
+
+    float timeSinceLastSavedFrame = 0;
 
     void StartNewVideo() {
         Recorder = new VideoRecorder();
@@ -106,6 +109,17 @@ public class CameraItem : GrabbableObject {
         DetectOnRecordButton();
         DetectOpenCloseButton();
         LogIfDebugBuild(recordState.Value.ToString());
+
+        if(isBeingUsed) {
+            timeSinceLastSavedFrame += Time.deltaTime;
+
+            if(timeSinceLastSavedFrame > 1/VideoRecorder.Framerate) {
+                timeSinceLastSavedFrame -= 1 / VideoRecorder.Framerate;
+
+                Texture2D currentFrame = renderTexture.GetTexture2D();
+                Recorder.CurrentClip.AddFrame(currentFrame);
+            }
+        }
     }
     public void DetectOpenCloseButton() {
         if (Plugin.InputActionsInstance.OpenCloseCameraKey.triggered && cooldownPassed) {
@@ -148,6 +162,8 @@ public class CameraItem : GrabbableObject {
         PlaySoundByID("startRecord");
         isBeingUsed = true;
         //Play on sound
+
+        Recorder.StartClip();
     }
 
     public void StopRecording() {
@@ -162,6 +178,9 @@ public class CameraItem : GrabbableObject {
         PlaySoundByID("stopRecord");
         isBeingUsed = false;
         //Play off sound
+
+        RecordedClip recorded = Recorder.EndClip();
+        VideoUploader.Instance.UploadClip(recorded);
     }
 
     public void PlaySoundByID(string soundID) {
@@ -170,17 +189,6 @@ public class CameraItem : GrabbableObject {
         } else {
             PlaySoundServerRpc(soundID);
         }
-    }
-    public void StartClip() {
-        //run this if they have a battery and press start record
-
-        Recorder.StartClip();
-    }
-    public void EndClip() {
-        //run this when they turn off the recorder or pause a recording or when battery dies
-
-        RecordedClip recorded = Recorder.EndClip();
-        VideoUploader.Instance.UploadClip(recorded);
     }
 
     // merging of clips will be handled by the extraction machine, because otherwise we don't know if they will record more.

@@ -15,6 +15,10 @@ internal class RecordedVideo {
         return Path.Combine(VideoRecorder.TempRecordingPath, VideoID);
     } }
 
+    public string FinalVideoPath { get {
+            return Path.Combine(VideoRecorder.TempRecordingPath, VideoID + VideoRecorder.VideoExtension);
+        } }
+
     public bool IsValid { get {
         List<RecordedClip> clips = GetAllClips();
         foreach(RecordedClip clip in clips) {

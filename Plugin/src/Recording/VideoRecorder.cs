@@ -12,6 +12,9 @@ internal class VideoRecorder {
         return Path.Combine(Path.GetTempPath(), "Lethal Company", "Viral Company", "recordings");
     } }
 
+    internal static string VideoExtension { get { return ".webm"; } }
+    internal static int Framerate { get { return 24; } }
+
     internal static string GenerateRandomID() {
         return new Random().NextString("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 10);
     }
@@ -32,6 +35,7 @@ internal class VideoRecorder {
     public RecordedClip EndClip() {
         Video.RegisterClip(CurrentClip.ClipID);
         Video.SetClip(CurrentClip.ClipID, CurrentClip);
+        CurrentClip.ClipFinished();
 
         RecordedClip result = CurrentClip;
         CurrentClip = null;
