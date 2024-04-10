@@ -4,6 +4,8 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
+using ViralCompany.Recording;
+using ViralCompany.src.Recording;
 
 namespace ViralCompany.CameraScrap;
 public class CameraItem : GrabbableObject {
@@ -42,8 +44,18 @@ public class CameraItem : GrabbableObject {
     }
     public NetworkVariable<RecordState> recordState = new NetworkVariable<RecordState>(RecordState.Off, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public override void ItemActivate(bool used, bool buttonDown = true) { }
+
+    // MAKE SURE TO RESET THIS WHEN EXTRACED.
+    internal VideoRecorder Recorder { get; private set; }
+
+    void StartNewVideo() {
+        Recorder = new VideoRecorder();
+        CreateRecorderServerRPC(Recorder.Video.VideoID);
+    }
+
     public override void Start() {
         base.Start();
+        StartNewVideo();
 
         Material newMaterial = new Material(Shader.Find("HDRP/Lit"));
         newMaterial.color = Color.white;
@@ -161,13 +173,30 @@ public class CameraItem : GrabbableObject {
     }
     public void StartClip() {
         //run this if they have a battery and press start record
+
+        Recorder.StartClip();
     }
     public void EndClip() {
         //run this when they turn off the recorder or pause a recording or when battery dies
+
+        RecordedClip recorded = Recorder.EndClip();
+        VideoUploader.Instance.UploadClip(recorded);
     }
-    public void MergeClips() {
-        //prolly a foreach loop done when the camera's battery dies (potentially could add a button to do it earlier)
+
+    // merging of clips will be handled by the extraction machine, because otherwise we don't know if they will record more.
+
+    [ServerRpc]
+    void CreateRecorderServerRPC(string videoID) {
+        CreateRecorderClientRPC(videoID);
     }
+
+    [ClientRpc]
+    void CreateRecorderClientRPC(string videoID) {
+        if(Recorder != null && Recorder.Video.VideoID == videoID) return;
+
+        Recorder = new VideoRecorder(videoID);
+    }
+
     IEnumerator StartUpCamera() {
         yield return new WaitForSeconds(openCameraAnimation.length/3);
         screenTransform.GetComponent<MeshRenderer>().material.color = Color.white;
