@@ -18,7 +18,7 @@ internal static class FFmpegEncoder {
             return Path.Combine(Paths.GameRootPath, "ffmpeg");
         } }
 
-    public static async Task CreateClip(List<Texture2DVideoFrame> frames, List<string> audioFiles, RecordedClip clip) {
+    public static async Task CreateClip(List<Texture2DVideoFrame> frames, RecordedClip clip) {
         Plugin.Logger.LogInfo("About to start encoding!");
         await FFMpegArguments
             .FromPipeInput(new RawVideoPipeSource(frames) {

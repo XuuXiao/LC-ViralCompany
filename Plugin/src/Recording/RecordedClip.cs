@@ -45,7 +45,7 @@ internal class RecordedClip {
             framesReadyForEncoding.Add(new Texture2DVideoFrame(frame));
         }
 
-        await FFmpegEncoder.CreateClip(framesReadyForEncoding, [], this);
+        await FFmpegEncoder.CreateClip(framesReadyForEncoding, this);
 
         IsValid = true;
         frames.Clear(); // clear frames for memory savings

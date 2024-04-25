@@ -13,7 +13,7 @@ internal class VideoRecorder {
         return Path.Combine(Path.GetTempPath(), "Lethal Company", "Viral Company", "recordings");
     } }
 
-    internal static string VideoExtension { get { return ".webm"; } }
+    internal const string VideoExtension = ".webm";
     internal static int Framerate { get { return 24; } }
 
     internal static string GenerateRandomID() {
@@ -32,16 +32,12 @@ internal class VideoRecorder {
 
     public void StartClip() {
         CurrentClip = new RecordedClip(Video, GenerateRandomID());
-        foreach(AudioRecorder audioRecorder in AudioRecorder.audioRecorders) {
-            audioRecorder.StartRecording(CurrentClip);
-        }
+        AudioRecorder.Instance.StartRecording(CurrentClip);
     }
 
     public void EndClip() {
-        foreach(AudioRecorder audioRecorder in AudioRecorder.audioRecorders) {
-            audioRecorder.StopRecording();
-        }
-            Video.RegisterClip(CurrentClip.ClipID);
+        AudioRecorder.Instance.StopRecording();
+        Video.RegisterClip(CurrentClip.ClipID);
         Video.SetClip(CurrentClip.ClipID, CurrentClip);
         CurrentClip.ClipFinished();
     }

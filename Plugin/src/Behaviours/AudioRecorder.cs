@@ -13,20 +13,20 @@ namespace ViralCompany.Behaviours;
 internal class AudioRecorder : MonoBehaviour {
 
 
-    internal static List<AudioRecorder> audioRecorders = [];
-    internal string fileName = "gameAudio.wav";
+    internal static AudioRecorder Instance;
+
 
     WavWriter wavWriter;
     LocalPlayerMicRecorder micRecorder;
 
     void Awake() {
-        audioRecorders.Add(this);
+        Instance = this;
         micRecorder = new LocalPlayerMicRecorder();
         FindObjectOfType<DissonanceComms>().SubscribeToRecordedAudio(micRecorder);
     }
 
     void OnDisable() {
-        audioRecorders.Remove(this);
+        Instance = null;
         FindObjectOfType<DissonanceComms>().UnsubscribeFromRecordedAudio(micRecorder);
     }
 
@@ -37,7 +37,7 @@ internal class AudioRecorder : MonoBehaviour {
     }
 
     internal void StartRecording(RecordedClip clip) {
-        wavWriter = new(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.{fileName}"));
+        wavWriter = new(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.gameAudio.wav"));
         micRecorder.StartRecording(clip);
     }
 
