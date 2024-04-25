@@ -50,6 +50,7 @@ internal static class FFmpegEncoder
                     .WithCustomArgument("-map 0:v:0")
                     .WithCustomArgument("-map [a]")
                     .WithCustomArgument("-ac 2")
+                    .WithVideoBitrate(RecordingSettings.BITRATE)
             )
             .LogArguments()
             .ProcessAsynchronously();

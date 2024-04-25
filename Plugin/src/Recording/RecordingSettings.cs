@@ -7,4 +7,5 @@ internal static class RecordingSettings {
     // Recording Settings
     internal const int FRAMERATE = 24;
     internal const int RESOLUTION = 350;
+    internal const int BITRATE = 528;
 }
