@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FFMpegCore;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -24,6 +25,11 @@ internal static class ExtensionMethods {
         }
 
         return new string(chars, 0, stringLength);
+    }
+
+    internal static FFMpegArgumentProcessor LogArguments(this FFMpegArgumentProcessor args) {
+        Plugin.Logger.LogDebug(args.Arguments);
+        return args;
     }
 
     internal static Texture2D GetTexture2D(this RenderTexture texture) {

@@ -12,6 +12,7 @@ using UnityEngine;
 using ViralCompany.Recording;
 using ViralCompany.Recording.Encoding;
 using ViralCompany.Recording.Video;
+using ViralCompany.Util;
 
 namespace ViralCompany.Recording.Encoding;
 internal static class FFmpegEncoder
@@ -33,11 +34,12 @@ internal static class FFmpegEncoder
                 FrameRate = VideoRecorder.Framerate
             })
             .OutputToFile(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"))
+            .LogArguments()
             .ProcessAsynchronously();
 
         Plugin.Logger.LogInfo("Frames to video done! Adding audio...");
 
-        FFMpegArgumentProcessor args = FFMpegArguments
+        await FFMpegArguments
             .FromFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"))
             .AddFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.localMic.wav"))
             .AddFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.gameAudio.wav"))
@@ -47,10 +49,10 @@ internal static class FFmpegEncoder
                     .WithCustomArgument("-map 0:v:0")
                     .WithCustomArgument("-map [a]")
                     .WithCustomArgument("-ac 2")
-            );
-        Plugin.Logger.LogDebug(args.Arguments);
-        await args
+            )
+            .LogArguments()
             .ProcessAsynchronously();
+
         Plugin.Logger.LogInfo($"Finished encoding, clipID: {clip.ClipID}");
     }
 }
