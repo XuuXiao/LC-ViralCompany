@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
-using ViralCompany.Recording;
+using ViralCompany.Recording.Encoding;
+using ViralCompany.Recording.Video;
 
-namespace ViralCompany.src.Recording;
+namespace ViralCompany.Recording.Audio;
 internal class LocalPlayerMicRecorder : IMicrophoneSubscriber {
     WavWriter wavWriter;
 
@@ -29,6 +30,6 @@ internal class LocalPlayerMicRecorder : IMicrophoneSubscriber {
     }
 
     public void Reset() {
-        
+
     }
 }

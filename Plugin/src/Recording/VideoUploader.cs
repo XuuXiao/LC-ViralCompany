@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using Unity.Netcode;
-using ViralCompany.Recording;
+using ViralCompany.Recording.Video;
 
 namespace ViralCompany.Recording;
 internal class VideoUploader : NetworkBehaviour {

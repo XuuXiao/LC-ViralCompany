@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using ViralCompany.Behaviours;
+using ViralCompany.Recording.Audio;
 
 namespace ViralCompany.src.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
@@ -16,6 +16,6 @@ internal static class PlayerControllerPatch {
             return;
         }
         Plugin.Logger.LogInfo("Adding recorder helper.");
-        __instance.gameObject.GetComponentInChildren<AudioListener>().gameObject.AddComponent<AudioRecorder>();
+        __instance.GetComponentInChildren<AudioListener>().gameObject.AddComponent<AudioRecorder>();
     }
 }

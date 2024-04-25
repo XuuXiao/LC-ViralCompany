@@ -7,10 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ViralCompany.Recording;
+namespace ViralCompany.Recording.Encoding;
 
-// why?????????????
-internal class Texture2DVideoFrame(Texture2D texture) : IVideoFrame {
+// why????????????? because FFMpegCore said so
+internal class Texture2DVideoFrame(Texture2D texture) : IVideoFrame
+{
     public int Width => Source.width;
 
     public int Height => Source.height;
@@ -19,17 +20,20 @@ internal class Texture2DVideoFrame(Texture2D texture) : IVideoFrame {
 
     public Texture2D Source { get; private set; } = texture ?? throw new ArgumentNullException(nameof(texture));
 
-    public void Serialize(Stream stream) {
+    public void Serialize(Stream stream)
+    {
         var data = Source.GetRawTextureData();
         stream.Write(data, 0, data.Length);
     }
 
-    public async Task SerializeAsync(Stream stream, CancellationToken token) {
+    public async Task SerializeAsync(Stream stream, CancellationToken token)
+    {
         var data = Source.GetRawTextureData();
         await stream.WriteAsync(data, 0, data.Length, token).ConfigureAwait(false);
     }
 
-    private static string ConvertStreamFormat(TextureFormat format) {
+    private static string ConvertStreamFormat(TextureFormat format)
+    {
         return "rgb24";
     }
 }

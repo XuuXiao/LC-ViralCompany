@@ -4,19 +4,25 @@ using System.IO;
 using System.Text;
 using Unity.Netcode;
 using UnityEngine.Animations.Rigging;
-using ViralCompany.Behaviours;
+using ViralCompany.Recording.Audio;
 using ViralCompany.Util;
 
-namespace ViralCompany.Recording;
-internal class VideoRecorder {
-    internal static string TempRecordingPath { get {
-        return Path.Combine(Path.GetTempPath(), "Lethal Company", "Viral Company", "recordings");
-    } }
+namespace ViralCompany.Recording.Video;
+internal class VideoRecorder
+{
+    internal static string TempRecordingPath
+    {
+        get
+        {
+            return Path.Combine(Path.GetTempPath(), "Lethal Company", "Viral Company", "recordings");
+        }
+    }
 
     internal const string VideoExtension = ".webm";
     internal static int Framerate { get { return 24; } }
 
-    internal static string GenerateRandomID() {
+    internal static string GenerateRandomID()
+    {
         return new Random().NextString("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 10);
     }
 
@@ -25,17 +31,20 @@ internal class VideoRecorder {
 
     public VideoRecorder() : this(GenerateRandomID()) { }
 
-    public VideoRecorder(string videoID) {
+    public VideoRecorder(string videoID)
+    {
         Plugin.Logger.LogDebug("new VideoRecorder! videoid: " + videoID);
         Video = new RecordedVideo(videoID);
     }
 
-    public void StartClip() {
+    public void StartClip()
+    {
         CurrentClip = new RecordedClip(Video, GenerateRandomID());
         AudioRecorder.Instance.StartRecording(CurrentClip);
     }
 
-    public void EndClip() {
+    public void EndClip()
+    {
         AudioRecorder.Instance.StopRecording();
         Video.RegisterClip(CurrentClip.ClipID);
         Video.SetClip(CurrentClip.ClipID, CurrentClip);

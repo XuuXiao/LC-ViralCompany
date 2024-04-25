@@ -4,8 +4,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace ViralCompany.Recording;
-internal class WavWriter {
+namespace ViralCompany.Recording.Encoding;
+internal class WavWriter
+{
     private int bufferSize;
     private int numBuffers;
     private int outputRate = 44100;
@@ -15,7 +16,8 @@ internal class WavWriter {
 
     private FileStream fileStream;
 
-    internal WavWriter(string path) {
+    internal WavWriter(string path)
+    {
 
         outputRate = AudioSettings.outputSampleRate;
         AudioSettings.GetDSPBufferSize(out bufferSize, out numBuffers);
@@ -23,17 +25,19 @@ internal class WavWriter {
         fileStream = new FileStream(path, FileMode.Create);
         byte emptyByte = new byte();
 
-        for(int i = 0; i < headerSize; i++) // preparing the header
+        for (int i = 0; i < headerSize; i++) // preparing the header
         {
             fileStream.WriteByte(emptyByte);
         }
     }
 
-    internal void WriteStereoAudio(float[] dataSource) {
-        if(fileStream == null) {
+    internal void WriteStereoAudio(float[] dataSource)
+    {
+        if (fileStream == null)
+        {
             throw new IOException("WavWriter is CLOSED! Don't write to it!");
         }
-        Int16[] intData = new Int16[dataSource.Length];
+        short[] intData = new short[dataSource.Length];
         // converting in 2 steps: float[] to Int16[], // then Int16[] to Byte[]
 
         byte[] bytesData = new byte[dataSource.Length * 2];
@@ -42,7 +46,8 @@ internal class WavWriter {
 
         int rescaleFactor = 32767; // to convert float to Int16
 
-        for(int i = 0; i < dataSource.Length; i++) {
+        for (int i = 0; i < dataSource.Length; i++)
+        {
             intData[i] = (short)(dataSource[i] * rescaleFactor);
             byte[] byteArr = BitConverter.GetBytes(intData[i]);
             byteArr.CopyTo(bytesData, i * 2);
@@ -51,17 +56,20 @@ internal class WavWriter {
         fileStream.Write(bytesData, 0, bytesData.Length);
     }
 
-    internal void WriteMonoAudio(float[] dataSource) {
-        if(fileStream == null) {
+    internal void WriteMonoAudio(float[] dataSource)
+    {
+        if (fileStream == null)
+        {
             throw new IOException("WavWriter is CLOSED! Don't write to it!");
         }
         // Prepare stereo data (twice the length of mono)
-        Int16[] intData = new Int16[dataSource.Length * 2];
+        short[] intData = new short[dataSource.Length * 2];
         byte[] bytesData = new byte[dataSource.Length * 4]; // Each sample is 2 bytes, so times 2 for stereo, times 2 again for bytes
 
         int rescaleFactor = 32767; // to convert float to Int16
 
-        for(int i = 0; i < dataSource.Length; i++) {
+        for (int i = 0; i < dataSource.Length; i++)
+        {
             // Convert mono to stereo by duplicating the sample
             short sample = (short)(dataSource[i] * rescaleFactor);
 
@@ -79,19 +87,20 @@ internal class WavWriter {
         fileStream.Write(bytesData, 0, bytesData.Length);
     }
 
-    internal void Close() {
+    internal void Close()
+    {
         fileStream.Seek(0, SeekOrigin.Begin);
 
-        byte[] riff = System.Text.Encoding.UTF8.GetBytes("RIFF");
+        byte[] riff = Encoding.UTF8.GetBytes("RIFF");
         fileStream.Write(riff, 0, 4);
 
         byte[] chunkSize = BitConverter.GetBytes(fileStream.Length - 8);
         fileStream.Write(chunkSize, 0, 4);
 
-        byte[] wave = System.Text.Encoding.UTF8.GetBytes("WAVE");
+        byte[] wave = Encoding.UTF8.GetBytes("WAVE");
         fileStream.Write(wave, 0, 4);
 
-        byte[] fmt = System.Text.Encoding.UTF8.GetBytes("fmt ");
+        byte[] fmt = Encoding.UTF8.GetBytes("fmt ");
         fileStream.Write(fmt, 0, 4);
 
         byte[] subChunk1 = BitConverter.GetBytes(16);
@@ -120,7 +129,7 @@ internal class WavWriter {
         byte[] bitsPerSample = BitConverter.GetBytes(sixteen);
         fileStream.Write(bitsPerSample, 0, 2);
 
-        byte[] dataString = System.Text.Encoding.UTF8.GetBytes("data");
+        byte[] dataString = Encoding.UTF8.GetBytes("data");
         fileStream.Write(dataString, 0, 4);
 
         byte[] subChunk2 = BitConverter.GetBytes(fileStream.Length - headerSize);

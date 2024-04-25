@@ -10,18 +10,26 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using ViralCompany.Recording;
-using ViralCompany.src.Recording;
+using ViralCompany.Recording.Encoding;
+using ViralCompany.Recording.Video;
 
-namespace ViralCompany.Recording;
-internal static class FFmpegEncoder {
-    internal static string FFmpegInstallPath { get {
+namespace ViralCompany.Recording.Encoding;
+internal static class FFmpegEncoder
+{
+    internal static string FFmpegInstallPath
+    {
+        get
+        {
             return Path.Combine(Paths.GameRootPath, "ffmpeg");
-        } }
+        }
+    }
 
-    public static async Task CreateClip(List<Texture2DVideoFrame> frames, RecordedClip clip) {
+    public static async Task CreateClip(List<Texture2DVideoFrame> frames, RecordedClip clip)
+    {
         Plugin.Logger.LogInfo("About to start encoding!");
         await FFMpegArguments
-            .FromPipeInput(new RawVideoPipeSource(frames) {
+            .FromPipeInput(new RawVideoPipeSource(frames)
+            {
                 FrameRate = VideoRecorder.Framerate
             })
             .OutputToFile(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"))
@@ -33,7 +41,7 @@ internal static class FFmpegEncoder {
             .FromFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"))
             .AddFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.localMic.wav"))
             .AddFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.gameAudio.wav"))
-            .OutputToFile($"{clip.ClipID}{VideoRecorder.VideoExtension}", 
+            .OutputToFile($"{clip.ClipID}{VideoRecorder.VideoExtension}",
                 addArguments: args => args
                     .WithCustomArgument("-filter_complex \"[1:a][2:a]amerge=inputs=2[a]\"")
                     .WithCustomArgument("-map 0:v:0")

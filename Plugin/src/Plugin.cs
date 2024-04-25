@@ -11,11 +11,12 @@ using System.Linq;
 using static LethalLib.Modules.Items;
 using ViralCompany.Keybinds;
 using YoutubeDLSharp;
-using ViralCompany.Recording;
 using FFMpegCore;
 using HarmonyLib;
+using ViralCompany.src.Recording.Encoding;
 
-namespace ViralCompany {
+namespace ViralCompany
+{
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     [BepInDependency(LethalLib.Plugin.ModGUID)] 
     [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
