@@ -49,6 +49,10 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="src\Behaviours\" />
+  </ItemGroup>
+
   <!-- Allows us to use Rpc methods. See https://github.com/EvaisaDev/UnityNetcodePatcher -->
   <!-- This MSBuild option does not work in Visual Studio, using cli option for now
   <ItemGroup>
@@ -70,6 +74,6 @@
 
 	<Target Name="CopyFiles" AfterTargets="NetcodePatch">
 		<Message Importance="high" Text="Copying to local lethal company install" />
-		<Copy SourceFiles="$(TargetPath)" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins"/>
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins" />
 	</Target>
 </Project>

@@ -13,7 +13,7 @@ using ViralCompany.Keybinds;
 using YoutubeDLSharp;
 using FFMpegCore;
 using HarmonyLib;
-using ViralCompany.src.Recording.Encoding;
+using ViralCompany.Recording.Encoding;
 
 namespace ViralCompany
 {

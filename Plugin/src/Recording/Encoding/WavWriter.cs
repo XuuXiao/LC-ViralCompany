@@ -91,16 +91,16 @@ internal class WavWriter
     {
         fileStream.Seek(0, SeekOrigin.Begin);
 
-        byte[] riff = Encoding.UTF8.GetBytes("RIFF");
+        byte[] riff = System.Text.Encoding.UTF8.GetBytes("RIFF");
         fileStream.Write(riff, 0, 4);
 
         byte[] chunkSize = BitConverter.GetBytes(fileStream.Length - 8);
         fileStream.Write(chunkSize, 0, 4);
 
-        byte[] wave = Encoding.UTF8.GetBytes("WAVE");
+        byte[] wave = System.Text.Encoding.UTF8.GetBytes("WAVE");
         fileStream.Write(wave, 0, 4);
 
-        byte[] fmt = Encoding.UTF8.GetBytes("fmt ");
+        byte[] fmt = System.Text.Encoding.UTF8.GetBytes("fmt ");
         fileStream.Write(fmt, 0, 4);
 
         byte[] subChunk1 = BitConverter.GetBytes(16);
@@ -129,7 +129,7 @@ internal class WavWriter
         byte[] bitsPerSample = BitConverter.GetBytes(sixteen);
         fileStream.Write(bitsPerSample, 0, 2);
 
-        byte[] dataString = Encoding.UTF8.GetBytes("data");
+        byte[] dataString = System.Text.Encoding.UTF8.GetBytes("data");
         fileStream.Write(dataString, 0, 4);
 
         byte[] subChunk2 = BitConverter.GetBytes(fileStream.Length - headerSize);
