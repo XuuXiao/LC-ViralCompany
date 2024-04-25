@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using ViralCompany.Behaviours;
 using ViralCompany.Recording;
 
 namespace ViralCompany.Recording;
@@ -44,7 +45,7 @@ internal class RecordedClip {
             framesReadyForEncoding.Add(new Texture2DVideoFrame(frame));
         }
 
-        await FFmpegEncoder.ConvertFramesToVideo(framesReadyForEncoding, FilePath);
+        await FFmpegEncoder.CreateClip(framesReadyForEncoding, [], this);
 
         IsValid = true;
         frames.Clear(); // clear frames for memory savings

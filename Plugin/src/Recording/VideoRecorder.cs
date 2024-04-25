@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using Unity.Netcode;
 using UnityEngine.Animations.Rigging;
+using ViralCompany.Behaviours;
 using ViralCompany.Util;
 
 namespace ViralCompany.Recording;
@@ -25,20 +26,23 @@ internal class VideoRecorder {
     public VideoRecorder() : this(GenerateRandomID()) { }
 
     public VideoRecorder(string videoID) {
+        Plugin.Logger.LogDebug("new VideoRecorder! videoid: " + videoID);
         Video = new RecordedVideo(videoID);
     }
 
     public void StartClip() {
         CurrentClip = new RecordedClip(Video, GenerateRandomID());
+        foreach(AudioRecorder audioRecorder in AudioRecorder.audioRecorders) {
+            audioRecorder.StartRecording(CurrentClip);
+        }
     }
 
-    public RecordedClip EndClip() {
-        Video.RegisterClip(CurrentClip.ClipID);
+    public void EndClip() {
+        foreach(AudioRecorder audioRecorder in AudioRecorder.audioRecorders) {
+            audioRecorder.StopRecording();
+        }
+            Video.RegisterClip(CurrentClip.ClipID);
         Video.SetClip(CurrentClip.ClipID, CurrentClip);
         CurrentClip.ClipFinished();
-
-        RecordedClip result = CurrentClip;
-        CurrentClip = null;
-        return result;
     }
 }

@@ -13,6 +13,7 @@ using ViralCompany.Keybinds;
 using YoutubeDLSharp;
 using ViralCompany.Recording;
 using FFMpegCore;
+using HarmonyLib;
 
 namespace ViralCompany {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
@@ -36,6 +37,9 @@ namespace ViralCompany {
                 await YoutubeDLSharp.Utils.DownloadFFmpeg(FFmpegEncoder.FFmpegInstallPath);
             }
             GlobalFFOptions.Configure(options => options.BinaryFolder = FFmpegEncoder.FFmpegInstallPath);
+
+            Logger.LogInfo("Doing patches");
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginInfo.PLUGIN_GUID);
 
             // Camera Item/Scrap + keybinds
             InputActionsInstance = new IngameKeybinds();

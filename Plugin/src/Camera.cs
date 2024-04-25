@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Dissonance;
+using Dissonance.Audio.Capture;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -52,12 +54,17 @@ public class CameraItem : GrabbableObject {
 
     void StartNewVideo() {
         Recorder = new VideoRecorder();
+
         CreateRecorderServerRPC(Recorder.Video.VideoID);
     }
 
     public override void Start() {
         base.Start();
-        StartNewVideo();
+        if(Recorder != null) {
+            Plugin.Logger.LogWarning("ermm... what the simga! Start() was called twice?");
+        } else {
+            StartNewVideo();
+        }
 
         Material newMaterial = new Material(Shader.Find("HDRP/Lit"));
         newMaterial.color = Color.white;
@@ -83,6 +90,7 @@ public class CameraItem : GrabbableObject {
         }
         screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
     }
+
     public override void Update() {
         base.Update();
         if (recordState.Value == RecordState.Off || recordState.Value == RecordState.Finished) {
@@ -94,7 +102,7 @@ public class CameraItem : GrabbableObject {
             StartCoroutine(PowerDownCamera());
             cameraOpen = false;
             if (recordState.Value == RecordState.On) {
-                StopRecording();
+                //StopRecording();
             }
         }
         if (recordState.Value == RecordState.On && playerHeldBy == GameNetworkManager.Instance.localPlayerController) {
@@ -102,24 +110,26 @@ public class CameraItem : GrabbableObject {
         }
         if (!isHeld || playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
         if (insertedBattery.charge <= 0) {
-            StopRecording();
+            //StopRecording();
         }
         DetectOffRecordButton();
         DetectOnRecordButton();
         DetectOpenCloseButton();
-        LogIfDebugBuild(recordState.Value.ToString());
 
         if(isBeingUsed) {
-            timeSinceLastSavedFrame += Time.deltaTime;
+            timeSinceLastSavedFrame -= Time.deltaTime;
 
-            if(timeSinceLastSavedFrame > 1/VideoRecorder.Framerate) {
-                timeSinceLastSavedFrame -= 1 / VideoRecorder.Framerate;
-
-                Texture2D currentFrame = renderTexture.GetTexture2D();
-                Recorder.CurrentClip.AddFrame(currentFrame);
+            while(timeSinceLastSavedFrame <= 0) {
+                timeSinceLastSavedFrame += (float)1 / VideoRecorder.Framerate;
+                Recorder.CurrentClip.AddFrame(renderTexture.GetTexture2D());
             }
         }
+
+        if(Plugin.InputActionsInstance.FlipCameraKey.triggered) {
+            transform.Find("Camera").forward = -transform.Find("Camera").forward;
+        }
     }
+
     public void DetectOpenCloseButton() {
         if(!Plugin.InputActionsInstance.OpenCloseCameraKey.triggered) return;
         //if(!cooldownPassed) return;
@@ -129,7 +139,6 @@ public class CameraItem : GrabbableObject {
             screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
             cameraOpen = false;
             cooldownPassed = false;
-            StopRecording();
             StartCoroutine(CooldownPassing());
             return;
         } else {
@@ -179,8 +188,7 @@ public class CameraItem : GrabbableObject {
         isBeingUsed = false;
         //Play off sound
 
-        RecordedClip recorded = Recorder.EndClip();
-        // VideoUploader.Instance.UploadClip(recorded);
+        Recorder.EndClip();
     }
 
     public void PlaySoundByID(string soundID) {
@@ -200,9 +208,8 @@ public class CameraItem : GrabbableObject {
 
     [ClientRpc]
     void CreateRecorderClientRPC(string videoID) {
-        if(Recorder != null && Recorder.Video.VideoID == videoID) return;
-
-        Recorder = new VideoRecorder(videoID);
+        //if(Recorder == null && Recorder.Video.VideoID != videoID)
+            //Recorder = new VideoRecorder(videoID);
     }
 
     IEnumerator StartUpCamera() {
