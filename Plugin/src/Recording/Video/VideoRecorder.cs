@@ -19,7 +19,6 @@ internal class VideoRecorder
     }
 
     internal const string VideoExtension = ".webm";
-    internal static int Framerate { get { return 24; } }
 
     internal static string GenerateRandomID()
     {

@@ -12,6 +12,7 @@ using UnityEngine;
 using ViralCompany.Recording;
 using ViralCompany.Recording.Encoding;
 using ViralCompany.Recording.Video;
+using ViralCompany.src.Recording;
 using ViralCompany.Util;
 
 namespace ViralCompany.Recording.Encoding;
@@ -31,7 +32,7 @@ internal static class FFmpegEncoder
         await FFMpegArguments
             .FromPipeInput(new RawVideoPipeSource(frames)
             {
-                FrameRate = VideoRecorder.Framerate
+                FrameRate = RecordingSettings.FRAMERATE
             })
             .OutputToFile(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"))
             .LogArguments()

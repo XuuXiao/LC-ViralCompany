@@ -7,6 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
 using ViralCompany.Recording.Video;
+using ViralCompany.src.Recording;
 using ViralCompany.Util;
 
 namespace ViralCompany.CameraScrap;
@@ -120,7 +121,7 @@ public class CameraItem : GrabbableObject {
             timeSinceLastSavedFrame -= Time.deltaTime;
 
             while(timeSinceLastSavedFrame <= 0) {
-                timeSinceLastSavedFrame += (float)1 / VideoRecorder.Framerate;
+                timeSinceLastSavedFrame += (float)1 / RecordingSettings.FRAMERATE;
                 Recorder.CurrentClip.AddFrame(renderTexture.GetTexture2D());
             }
         }
