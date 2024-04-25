@@ -6,7 +6,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
-using ViralCompany.Recording;
+using ViralCompany.Recording.Video;
 using ViralCompany.Util;
 
 namespace ViralCompany.CameraScrap;
