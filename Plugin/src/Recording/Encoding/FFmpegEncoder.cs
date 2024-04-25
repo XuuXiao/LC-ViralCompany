@@ -44,7 +44,7 @@ internal static class FFmpegEncoder
             .FromFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"))
             .AddFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.localMic.wav"))
             .AddFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.gameAudio.wav"))
-            .OutputToFile($"{clip.ClipID}{VideoRecorder.VideoExtension}",
+            .OutputToFile(clip.FilePath,
                 addArguments: args => args
                     .WithCustomArgument("-filter_complex \"[1:a][2:a]amerge=inputs=2[a]\"")
                     .WithCustomArgument("-map 0:v:0")
@@ -54,6 +54,10 @@ internal static class FFmpegEncoder
             .LogArguments()
             .ProcessAsynchronously();
 
-        Plugin.Logger.LogInfo($"Finished encoding, clipID: {clip.ClipID}");
+        Plugin.Logger.LogInfo($"Finished encoding clip: {clip.ClipID}. Cleaning up other files now.");
+
+        File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"));
+        File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.localMic.wav"));
+        File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.gameAudio.wav"));
     }
 }
