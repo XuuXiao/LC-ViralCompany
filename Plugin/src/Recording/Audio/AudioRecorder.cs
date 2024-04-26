@@ -39,6 +39,10 @@ internal class AudioRecorder : MonoBehaviour
         wavWriter.Close();
         wavWriter = null;
     }
+    internal void Flush() {
+        wavWriter.Flush();
+        micRecorder.Flush();
+    }
 
     internal void StartRecording(RecordedClip clip)
     {

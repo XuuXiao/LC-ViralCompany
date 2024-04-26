@@ -16,6 +16,8 @@ internal class WavWriter
 
     private FileStream fileStream;
 
+    List<byte> buffer = [];
+
     internal WavWriter(string path)
     {
 
@@ -52,8 +54,7 @@ internal class WavWriter
             byte[] byteArr = BitConverter.GetBytes(intData[i]);
             byteArr.CopyTo(bytesData, i * 2);
         }
-
-        fileStream.Write(bytesData, 0, bytesData.Length);
+        buffer.AddRange(bytesData);
     }
 
     internal void WriteMonoAudio(float[] dataSource)
@@ -84,7 +85,13 @@ internal class WavWriter
         }
 
         // Write stereo data to file stream
-        fileStream.Write(bytesData, 0, bytesData.Length);
+        buffer.AddRange(bytesData);
+    }
+
+    internal void Flush() {
+        byte[] data = [.. buffer];
+        fileStream.Write(data, 0, data.Length);
+        buffer.Clear();
     }
 
     internal void Close()

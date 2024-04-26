@@ -21,6 +21,9 @@ internal class LocalPlayerMicRecorder : IMicrophoneSubscriber {
         wavWriter.Close();
         wavWriter = null;
     }
+    internal void Flush() {
+        wavWriter.Flush();
+    }
 
     public void ReceiveMicrophoneData(ArraySegment<float> buffer, WaveFormat format) {
         if(format.SampleRate != AudioSettings.outputSampleRate) Plugin.Logger.LogWarning("Microphone sample rate is not the same as AudioSettings!");

@@ -6,6 +6,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
+using ViralCompany.Recording.Audio;
 using ViralCompany.Recording.Video;
 using ViralCompany.src.Recording;
 using ViralCompany.Util;
@@ -120,9 +121,10 @@ public class CameraItem : GrabbableObject {
         if(isBeingUsed) {
             timeSinceLastSavedFrame -= Time.deltaTime;
 
-            while(timeSinceLastSavedFrame <= 0) {
+            if(timeSinceLastSavedFrame <= 0) {
                 timeSinceLastSavedFrame += (float)1 / RecordingSettings.FRAMERATE;
                 Recorder.CurrentClip.AddFrame(renderTexture.GetTexture2D());
+                AudioRecorder.Instance.Flush();
             }
         }
 

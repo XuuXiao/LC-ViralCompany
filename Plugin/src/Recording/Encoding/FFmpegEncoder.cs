@@ -16,22 +16,17 @@ using ViralCompany.src.Recording;
 using ViralCompany.Util;
 
 namespace ViralCompany.Recording.Encoding;
-internal static class FFmpegEncoder
-{
-    internal static string FFmpegInstallPath
-    {
-        get
-        {
+internal static class FFmpegEncoder {
+    internal static string FFmpegInstallPath {
+        get {
             return Path.Combine(Paths.GameRootPath, "ffmpeg");
         }
     }
 
-    public static async Task CreateClip(List<Texture2DVideoFrame> frames, RecordedClip clip)
-    {
+    public static async Task CreateClip(List<Texture2DVideoFrame> frames, RecordedClip clip) {
         Plugin.Logger.LogInfo("About to start encoding!");
         await FFMpegArguments
-            .FromPipeInput(new RawVideoPipeSource(frames)
-            {
+            .FromPipeInput(new RawVideoPipeSource(frames) {
                 FrameRate = RecordingSettings.FRAMERATE
             })
             .OutputToFile(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"))

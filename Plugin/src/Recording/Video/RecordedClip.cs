@@ -54,7 +54,7 @@ internal class RecordedClip
         frames.Clear(); // clear frames for memory savings
     }
 
-    List<byte[]> BreakIntoChunks()
+    internal List<byte[]> BreakIntoChunks()
     {
         List<byte[]> chunks = [];
         byte[] data = File.ReadAllBytes(FilePath);
