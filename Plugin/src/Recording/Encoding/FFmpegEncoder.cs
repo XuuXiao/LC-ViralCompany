@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using Dissonance;
 using FFMpegCore;
+using FFMpegCore.Enums;
 using FFMpegCore.Pipes;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,7 @@ internal static class FFmpegEncoder {
                     .WithCustomArgument("-map 0:v:0")
                     .WithCustomArgument("-map [a]")
                     .WithCustomArgument("-ac 2")
+                    .WithCustomArgument("-c:v libvpx")
                     .WithVideoBitrate(RecordingSettings.BITRATE)
             )
             .LogArguments()
