@@ -26,7 +26,7 @@ internal class RecordedClip
     public string ClipID { get; private set; }
 
     public RecordedVideo Video { get; private set; }
-    List<Texture2D> frames;
+    List<Texture2DVideoFrame> frames;
 
     public RecordedClip(RecordedVideo video, string clipID)
     {
@@ -42,19 +42,13 @@ internal class RecordedClip
             frames = [];
         }
 
-        frames.Add(frame);
+        frames.Add(new Texture2DVideoFrame(frame));
     }
 
     public async void ClipFinished()
     {
-        List<Texture2DVideoFrame> framesReadyForEncoding = [];
-
-        foreach (Texture2D frame in frames)
-        {
-            framesReadyForEncoding.Add(new Texture2DVideoFrame(frame));
-        }
-
-        await FFmpegEncoder.CreateClip(framesReadyForEncoding, this);
+        
+        await FFmpegEncoder.CreateClip(frames, this);
 
         IsValid = true;
         frames.Clear(); // clear frames for memory savings
