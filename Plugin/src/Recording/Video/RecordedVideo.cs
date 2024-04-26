@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine.Timeline;
+using ViralCompany.src.Recording;
+using YoutubeDLSharp.Metadata;
 
 namespace ViralCompany.Recording.Video;
 internal class RecordedVideo
@@ -48,6 +50,7 @@ internal class RecordedVideo
 
         // make sure that the directory exists lol
         Directory.CreateDirectory(FolderPath);
+        VideoDatabase.videos.Add(VideoID, this);
     }
 
     /// <summary>

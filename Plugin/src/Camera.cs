@@ -6,6 +6,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
+using ViralCompany.Recording;
 using ViralCompany.Recording.Audio;
 using ViralCompany.Recording.Video;
 using ViralCompany.src.Recording;
@@ -62,11 +63,7 @@ public class CameraItem : GrabbableObject {
 
     public override void Start() {
         base.Start();
-        if(Recorder != null) {
-            Plugin.Logger.LogWarning("ermm... what the simga! Start() was called twice?");
-        } else {
-            StartNewVideo();
-        }
+        
 
         Material newMaterial = new Material(Shader.Find("HDRP/Lit"));
         newMaterial.color = Color.white;
@@ -99,16 +96,13 @@ public class CameraItem : GrabbableObject {
             isBeingUsed = false;
         }
         if (!isHeld && cameraOpen) {
-            DoAnimationClientRpc("closeCamera");
+            DoAnimation("closeCamera");
             screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
             StartCoroutine(PowerDownCamera());
             cameraOpen = false;
             if (recordState.Value == RecordState.On) {
                 //StopRecording();
             }
-        }
-        if (recordState.Value == RecordState.On && playerHeldBy == GameNetworkManager.Instance.localPlayerController) {
-            recordingTime += Time.deltaTime;
         }
         if (!isHeld || playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
         if (insertedBattery.charge <= 0) {
@@ -138,18 +132,18 @@ public class CameraItem : GrabbableObject {
         //if(!cooldownPassed) return;
 
         if (cameraOpen) {
-            DoAnimationClientRpc("closeCamera");
             screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
             cameraOpen = false;
             cooldownPassed = false;
             StartCoroutine(CooldownPassing());
+            DoAnimation("closeCamera");
             return;
         } else {
-            DoAnimationClientRpc("openCamera");
             cameraOpen = true;
             cooldownPassed = false;
             StartCoroutine(StartUpCamera());
             StartCoroutine(CooldownPassing());
+            DoAnimation("openCamera");
             return;
         }
     }
@@ -174,6 +168,10 @@ public class CameraItem : GrabbableObject {
         PlaySoundByID("startRecord");
         isBeingUsed = true;
         //Play on sound
+
+        if(Recorder == null) {
+            StartNewVideo();
+        }
 
         Recorder.StartClip();
     }
@@ -211,8 +209,8 @@ public class CameraItem : GrabbableObject {
 
     [ClientRpc]
     void CreateRecorderClientRPC(string videoID) {
-        //if(Recorder == null && Recorder.Video.VideoID != videoID)
-            //Recorder = new VideoRecorder(videoID);
+        if(Recorder == null || Recorder.Video.VideoID != videoID)
+            Recorder = new VideoRecorder(videoID);
     }
 
     IEnumerator StartUpCamera() {
@@ -269,6 +267,19 @@ public class CameraItem : GrabbableObject {
         WalkieTalkie.TransmitOneShotAudio(CameraSFX, sound, 1);
         RoundManager.Instance.PlayAudibleNoise(transform.position, 10, 1, 0, isInShipRoom && StartOfRound.Instance.hangarDoorsClosed);
     }
+    public void DoAnimation(string animationName) {
+        if(IsHost) {
+            DoAnimationClientRpc(animationName);
+        } else {
+            DoAnimationServerRpc(animationName);
+        }
+    }
+
+    [ServerRpc]
+    public void DoAnimationServerRpc(string animationName) {
+        DoAnimationClientRpc(animationName);
+    }
+
     [ClientRpc]
     public void DoAnimationClientRpc(string animationName) {
         LogIfDebugBuild($"Animation: {animationName}");

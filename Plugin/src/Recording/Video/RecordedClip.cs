@@ -28,6 +28,12 @@ internal class RecordedClip
     public RecordedVideo Video { get; private set; }
     List<Texture2DVideoFrame> frames;
 
+    internal static Action<RecordedClip> OnFinishEncoding = delegate { };
+
+    // maybe move this into a seperate class/struct?
+    internal Dictionary<int, byte[]> DownloadedChunkData;
+    internal int ChunkCountToDownload;
+
     public RecordedClip(RecordedVideo video, string clipID)
     {
         Video = video;
@@ -58,23 +64,17 @@ internal class RecordedClip
     {
         List<byte[]> chunks = [];
         byte[] data = File.ReadAllBytes(FilePath);
+        Plugin.Logger.LogDebug($"Reading back the file, we've got {data.Length} bytes to chunkify. That's about {Mathf.Ceil(data.Length/CHUNK_SIZE)} chunks.");
 
-        int i;
-        for (i = 0; i < data.Length; i += CHUNK_SIZE)
-        {
-            byte[] chunk = new byte[CHUNK_SIZE];
+        int i = 0;
+        while(i < data.Length) {
+            int chunkSize = Mathf.Min(CHUNK_SIZE, data.Length - i);
+            byte[] chunk = new byte[chunkSize];
             Array.Copy(data, i, chunk, 0, chunk.Length);
+            Plugin.Logger.LogDebug($"Created chunk {chunks.Count} with a size of {data.Length}");
+            chunks.Add(chunk);
 
-            Plugin.Logger.LogDebug($"Created chunk {chunks.Count} with a size of {CHUNK_SIZE}");
-            chunks.Add(chunk);
-        }
-        if (i < data.Length)
-        {
-            int finalChunkSize = data.Length - i;
-            Plugin.Logger.LogDebug($"Creating a last chunk of size: {finalChunkSize}");
-            byte[] chunk = new byte[finalChunkSize];
-            Array.Copy(data, i, chunk, 0, chunk.Length);
-            chunks.Add(chunk);
+            i += CHUNK_SIZE;
         }
 
         return chunks;

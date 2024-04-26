@@ -1,6 +1,7 @@
 ﻿using FFMpegCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
@@ -28,7 +29,7 @@ internal static class ExtensionMethods {
     }
 
     internal static FFMpegArgumentProcessor LogArguments(this FFMpegArgumentProcessor args) {
-        Plugin.Logger.LogDebug(args.Arguments);
+        Plugin.Logger.LogDebug(args.Arguments.Replace(Path.GetTempPath(), "%TEMP%" + Path.PathSeparator));
         return args;
     }
 

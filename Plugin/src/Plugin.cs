@@ -14,6 +14,7 @@ using YoutubeDLSharp;
 using FFMpegCore;
 using HarmonyLib;
 using ViralCompany.Recording.Encoding;
+using ViralCompany.Recording;
 
 namespace ViralCompany
 {
@@ -46,6 +47,8 @@ namespace ViralCompany
             InputActionsInstance = new IngameKeybinds();
 
             Camera = Assets.MainAssetBundle.LoadAsset<Item>("CameraObj");
+            Camera.spawnPrefab.AddComponent<VideoUploader>(); // change this :skull:
+
             Utilities.FixMixerGroups(Camera.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Camera.spawnPrefab);
             TerminalNode cTerminalNode = Assets.MainAssetBundle.LoadAsset<TerminalNode>("cTerminalNode");
