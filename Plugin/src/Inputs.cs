@@ -9,4 +9,7 @@ public class IngameKeybinds : LcInputActions {
     public InputAction StartRecordKey { get; set; }
     [InputAction("<Mouse>/leftButton", Name = "OpenCloseCamera")]
     public InputAction OpenCloseCameraKey { get; set; }
+
+    [InputAction("<Mouse>/r", Name = "FlipCamera")]
+    public InputAction FlipCameraKey { get; set; }
 }

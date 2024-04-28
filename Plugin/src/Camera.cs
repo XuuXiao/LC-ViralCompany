@@ -1,9 +1,16 @@
 using System;
 using System.Collections;
+using Dissonance;
+using Dissonance.Audio.Capture;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using ViralCompany;
+using ViralCompany.Recording;
+using ViralCompany.Recording.Audio;
+using ViralCompany.Recording.Video;
+using ViralCompany.src.Recording;
+using ViralCompany.Util;
 
 namespace ViralCompany.CameraScrap;
 public class CameraItem : GrabbableObject {
@@ -42,13 +49,26 @@ public class CameraItem : GrabbableObject {
     }
     public NetworkVariable<RecordState> recordState = new NetworkVariable<RecordState>(RecordState.Off, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public override void ItemActivate(bool used, bool buttonDown = true) { }
+
+    // MAKE SURE TO RESET THIS WHEN EXTRACED.
+    internal VideoRecorder Recorder { get; private set; }
+
+    float timeSinceLastSavedFrame = 0;
+
+    void StartNewVideo() {
+        Recorder = new VideoRecorder();
+
+        CreateRecorderServerRPC(Recorder.Video.VideoID);
+    }
+
     public override void Start() {
         base.Start();
+        
 
         Material newMaterial = new Material(Shader.Find("HDRP/Lit"));
         newMaterial.color = Color.white;
 
-        renderTexture = new RenderTexture(256, 256, 0);
+        renderTexture = new RenderTexture(RecordingSettings.RESOLUTION, RecordingSettings.RESOLUTION, 0);
 
         Camera cameraComponent = this.transform.Find("Camera").GetComponent<Camera>();
         cameraComponent.targetTexture = renderTexture;
@@ -69,22 +89,20 @@ public class CameraItem : GrabbableObject {
         }
         screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
     }
+
     public override void Update() {
         base.Update();
         if (recordState.Value == RecordState.Off || recordState.Value == RecordState.Finished) {
             isBeingUsed = false;
         }
         if (!isHeld && cameraOpen) {
-            DoAnimationClientRpc("closeCamera");
+            DoAnimation("closeCamera");
             screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
             StartCoroutine(PowerDownCamera());
             cameraOpen = false;
             if (recordState.Value == RecordState.On) {
                 StopRecording();
             }
-        }
-        if (recordState.Value == RecordState.On && playerHeldBy == GameNetworkManager.Instance.localPlayerController) {
-            recordingTime += Time.deltaTime;
         }
         if (!isHeld || playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
         if (insertedBattery.charge <= 0) {
@@ -93,26 +111,40 @@ public class CameraItem : GrabbableObject {
         DetectOffRecordButton();
         DetectOnRecordButton();
         DetectOpenCloseButton();
-        LogIfDebugBuild(recordState.Value.ToString());
-    }
-    public void DetectOpenCloseButton() {
-        if (Plugin.InputActionsInstance.OpenCloseCameraKey.triggered && cooldownPassed) {
-            if (cameraOpen && cooldownPassed) {
-                DoAnimationClientRpc("closeCamera");
-                screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
-                cameraOpen = false;
-                cooldownPassed = false;
-                StopRecording();
-                StartCoroutine(CooldownPassing());
-                return;
-            } else if (cooldownPassed) {
-                DoAnimationClientRpc("openCamera");
-                cameraOpen = true;
-                cooldownPassed = false;
-                StartCoroutine(StartUpCamera());
-                StartCoroutine(CooldownPassing());
-                return;
+
+        if(isBeingUsed) {
+            timeSinceLastSavedFrame -= Time.deltaTime;
+
+            if(timeSinceLastSavedFrame <= 0) {
+                timeSinceLastSavedFrame += (float)1 / RecordingSettings.FRAMERATE;
+                Recorder.CurrentClip.AddFrame(renderTexture.GetTexture2D());
+                AudioRecorder.Instance.Flush();
             }
+        }
+
+        if(Plugin.InputActionsInstance.FlipCameraKey.triggered) {
+            transform.Find("Camera").forward = -transform.Find("Camera").forward;
+        }
+    }
+
+    public void DetectOpenCloseButton() {
+        if(!Plugin.InputActionsInstance.OpenCloseCameraKey.triggered) return;
+        //if(!cooldownPassed) return;
+
+        if (cameraOpen) {
+            screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
+            cameraOpen = false;
+            cooldownPassed = false;
+            StartCoroutine(CooldownPassing());
+            DoAnimation("closeCamera");
+            return;
+        } else {
+            cameraOpen = true;
+            cooldownPassed = false;
+            StartCoroutine(StartUpCamera());
+            StartCoroutine(CooldownPassing());
+            DoAnimation("openCamera");
+            return;
         }
     }
     public void DetectOnRecordButton() {
@@ -136,6 +168,12 @@ public class CameraItem : GrabbableObject {
         PlaySoundByID("startRecord");
         isBeingUsed = true;
         //Play on sound
+
+        if(Recorder == null) {
+            StartNewVideo();
+        }
+
+        Recorder.StartClip();
     }
 
     public void StopRecording() {
@@ -150,6 +188,8 @@ public class CameraItem : GrabbableObject {
         PlaySoundByID("stopRecord");
         isBeingUsed = false;
         //Play off sound
+
+        Recorder.EndClip();
     }
 
     public void PlaySoundByID(string soundID) {
@@ -159,15 +199,20 @@ public class CameraItem : GrabbableObject {
             PlaySoundServerRpc(soundID);
         }
     }
-    public void StartClip() {
-        //run this if they have a battery and press start record
+
+    // merging of clips will be handled by the extraction machine, because otherwise we don't know if they will record more.
+
+    [ServerRpc]
+    void CreateRecorderServerRPC(string videoID) {
+        CreateRecorderClientRPC(videoID);
     }
-    public void EndClip() {
-        //run this when they turn off the recorder or pause a recording or when battery dies
+
+    [ClientRpc]
+    void CreateRecorderClientRPC(string videoID) {
+        if(Recorder == null || Recorder.Video.VideoID != videoID)
+            Recorder = new VideoRecorder(videoID);
     }
-    public void MergeClips() {
-        //prolly a foreach loop done when the camera's battery dies (potentially could add a button to do it earlier)
-    }
+
     IEnumerator StartUpCamera() {
         yield return new WaitForSeconds(openCameraAnimation.length/3);
         screenTransform.GetComponent<MeshRenderer>().material.color = Color.white;
@@ -222,8 +267,24 @@ public class CameraItem : GrabbableObject {
         WalkieTalkie.TransmitOneShotAudio(CameraSFX, sound, 1);
         RoundManager.Instance.PlayAudibleNoise(transform.position, 10, 1, 0, isInShipRoom && StartOfRound.Instance.hangarDoorsClosed);
     }
+    public void DoAnimation(string animationName) {
+        LogIfDebugBuild($"doing animation locally: {animationName}");
+        cameraAnimator.SetTrigger(animationName);
+        if(IsHost) {
+            DoAnimationClientRpc(animationName);
+        } else {
+            DoAnimationServerRpc(animationName);
+        }
+    }
+
+    [ServerRpc]
+    public void DoAnimationServerRpc(string animationName) {
+        DoAnimationClientRpc(animationName);
+    }
+
     [ClientRpc]
     public void DoAnimationClientRpc(string animationName) {
+        if(IsOwner) return;
         LogIfDebugBuild($"Animation: {animationName}");
         cameraAnimator.SetTrigger(animationName);
     }
