@@ -74,7 +74,7 @@ internal class VideoUploader : NetworkBehaviour {
         }
         if(IsOwner) return;
         Plugin.Logger.LogInfo($"About to recieve clip chunk data, videoID: {videoID}, clipID: {clipId}, {chunkCount} chunks");
-        RecordedVideo video = VideoDatabase.videos[videoID]; // todo: actually have this get a refernce to the correct video
+        RecordedVideo video = VideoDatabase.videos[videoID];
 
         video.RegisterClip(clipId);
         RecordedClip clip = new(video, clipId) {
