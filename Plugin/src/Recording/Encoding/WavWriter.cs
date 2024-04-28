@@ -12,7 +12,6 @@ internal class WavWriter
     private int outputRate = 44100;
     private string fileName;
     private int headerSize = 44; // default for uncompressed wav
-    public int Channels = 2;
 
     private FileStream fileStream;
 

@@ -12,10 +12,8 @@ internal static class PlayerControllerPatch {
     [HarmonyPostfix, HarmonyPatch(nameof(PlayerControllerB.ConnectClientToPlayerObject))]
     static void AddPlayerScriptToLocalPlayer(PlayerControllerB __instance) {
         if(GameNetworkManager.Instance.localPlayerController != __instance) {
-            Plugin.Logger.LogInfo("Not local player.");
             return;
         }
-        Plugin.Logger.LogInfo("Adding recorder helper.");
         __instance.GetComponentInChildren<AudioListener>().gameObject.AddComponent<AudioRecorder>();
     }
 }

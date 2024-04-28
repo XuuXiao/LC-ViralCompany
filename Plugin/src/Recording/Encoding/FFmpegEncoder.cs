@@ -25,7 +25,8 @@ internal static class FFmpegEncoder {
     }
 
     public static async Task CreateClip(List<Texture2DVideoFrame> frames, RecordedClip clip) {
-        Plugin.Logger.LogInfo("About to start encoding!");
+        if(Plugin.ModConfig.ExtendedLogging.Value)
+            Plugin.Logger.LogInfo("About to start encoding!");
         await FFMpegArguments
             .FromPipeInput(new RawVideoPipeSource(frames) {
                 FrameRate = RecordingSettings.FRAMERATE
@@ -34,7 +35,8 @@ internal static class FFmpegEncoder {
             .LogArguments()
             .ProcessAsynchronously();
 
-        Plugin.Logger.LogInfo("Frames to video done! Adding audio...");
+        if(Plugin.ModConfig.ExtendedLogging.Value)
+            Plugin.Logger.LogInfo("Frames to video done! Adding audio...");
 
         await FFMpegArguments
             .FromFileInput(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"))

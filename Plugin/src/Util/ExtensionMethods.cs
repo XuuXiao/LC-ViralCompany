@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
+using ViralCompany.Configs;
 using static UnityEngine.UI.Image;
 using Random = System.Random;
 
@@ -29,7 +30,8 @@ internal static class ExtensionMethods {
     }
 
     internal static FFMpegArgumentProcessor LogArguments(this FFMpegArgumentProcessor args) {
-        Plugin.Logger.LogDebug(args.Arguments.Replace(Path.GetTempPath(), "%TEMP%" + Path.PathSeparator));
+        if(Plugin.ModConfig.ExtendedLogging.Value)
+            Plugin.Logger.LogDebug(args.Arguments.Replace(Path.GetTempPath(), "%TEMP%" + Path.DirectorySeparatorChar));
         return args;
     }
 

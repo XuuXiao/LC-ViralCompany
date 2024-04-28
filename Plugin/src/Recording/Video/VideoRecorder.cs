@@ -32,7 +32,8 @@ internal class VideoRecorder
 
     public VideoRecorder(string videoID)
     {
-        Plugin.Logger.LogDebug("new VideoRecorder! videoid: " + videoID);
+        if(Plugin.ModConfig.ExtendedLogging.Value)
+            Plugin.Logger.LogDebug("new VideoRecorder! videoid: " + videoID);
         Video = new RecordedVideo(videoID);
     }
 
@@ -46,7 +47,7 @@ internal class VideoRecorder
     {
         AudioRecorder.Instance.StopRecording();
         Video.RegisterClip(CurrentClip.ClipID);
-        Video.SetClip(CurrentClip.ClipID, CurrentClip);
+        Video.StoreClip(CurrentClip.ClipID, CurrentClip);
         CurrentClip.ClipFinished();
     }
 }

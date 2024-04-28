@@ -13,9 +13,7 @@ internal class LocalPlayerMicRecorder : IMicrophoneSubscriber {
     WavWriter wavWriter;
 
     internal void StartRecording(RecordedClip clip) {
-        wavWriter = new(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.localMic.wav")) {
-            Channels = 1
-        };
+        wavWriter = new(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.localMic.wav"));
     }
     internal void StopRecording() {
         wavWriter.Close();

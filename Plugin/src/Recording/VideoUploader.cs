@@ -47,7 +47,8 @@ internal class VideoUploader : NetworkBehaviour {
         } else {
             StartSendingClipServerRpc(clip.Video.VideoID, clip.ClipID, chunkData.Count);
         }
-        Plugin.Logger.LogInfo($"Sending {chunkData.Count} chunks for clip. Will take about {chunkData.Count * DELAY_BETWEEN_PACKETS} seconds.");
+        if(Plugin.ModConfig.ExtendedLogging.Value)
+            Plugin.Logger.LogInfo($"Sending {chunkData.Count} chunks for clip. Will take about {chunkData.Count * DELAY_BETWEEN_PACKETS} seconds.");
 
         for(int chunkID = 0; chunkID < chunkData.Count; chunkID++) {
             yield return new WaitForSeconds(DELAY_BETWEEN_PACKETS);
@@ -60,6 +61,8 @@ internal class VideoUploader : NetworkBehaviour {
             }
 
         }
+
+        uploadingClips.Remove(clip.ClipID);
     }
 
     [ServerRpc]
@@ -73,7 +76,8 @@ internal class VideoUploader : NetworkBehaviour {
             Plugin.Logger.LogWarning($"WOAH! Tried to initalise sending chunk data for '{clipId}' when we're already recieving that!");
         }
         if(IsOwner) return;
-        Plugin.Logger.LogInfo($"About to recieve clip chunk data, videoID: {videoID}, clipID: {clipId}, {chunkCount} chunks");
+        if(Plugin.ModConfig.ExtendedLogging.Value)
+            Plugin.Logger.LogInfo($"About to recieve clip chunk data, videoID: {videoID}, clipID: {clipId}, {chunkCount} chunks");
         RecordedVideo video = VideoDatabase.videos[videoID];
 
         video.RegisterClip(clipId);
@@ -94,22 +98,24 @@ internal class VideoUploader : NetworkBehaviour {
     internal void SendChunkClientRpc(string clipId, int chunkID, byte[] data) {
         Plugin.Logger.LogDebug($"IsOwner of VideoUploader? {IsOwner}");
         if(IsOwner) return;
-        Plugin.Logger.LogInfo($"Recieved chunk {chunkID} data for '{clipId}'! data.Length: {data.Length}");
+        if(Plugin.ModConfig.ExtendedLogging.Value)
+            Plugin.Logger.LogInfo($"Recieved chunk {chunkID} data for '{clipId}'! data.Length: {data.Length}");
 
         RecordedClip clip = downloadingClips[clipId];
         clip.DownloadedChunkData.Add(chunkID, data);
         if(clip.DownloadedChunkData.Count == clip.ChunkCountToDownload) {
-            Plugin.Logger.LogInfo($"That was the last chunk! Saving to output file now!");
+            Plugin.Logger.LogInfo($"Finished downloading clip: {clipId}");
 
             List<byte> bytes = [];
             for(int i = 0; i < clip.ChunkCountToDownload; i++) { // make sure chunks are in order
                 bytes.AddRange(clip.DownloadedChunkData[i]);
             }
 
-            File.WriteAllBytes("downloaded.webm", [.. bytes]);
-
+            File.WriteAllBytes("downloaded.webm", [.. bytes]); // TODO: Change to clip.FilePath
+            
             clip.DownloadedChunkData = null; // clear out of memory.
-            clip.Video.SetClip(clipId, clip);
+            downloadingClips.Remove(clipId);
+            clip.Video.StoreClip(clipId, clip); // register as downloaded
         }
     }
 }

@@ -78,7 +78,7 @@ internal class RecordedVideo
         return GetAllClips().Where(clip => clip != null).ToList();
     }
 
-    public void SetClip(string clipID, RecordedClip clip)
+    public void StoreClip(string clipID, RecordedClip clip)
     {
         if (!Clips.ContainsKey(clipID)) throw new ArgumentOutOfRangeException($"ClipID: '{clipID}' has not been registered and yet it was downloaded?!?!");
         if (Clips[clipID] != null) throw new ArgumentException($"ClipID: '{clipID}' has already been sent and added to the recorded video!");

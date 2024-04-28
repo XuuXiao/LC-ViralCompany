@@ -44,7 +44,8 @@ internal class RecordedClip
     {
         if (frames == null)
         {
-            Plugin.Logger.LogDebug("Inited RecordedClip for recording.");
+            if(Plugin.ModConfig.ExtendedLogging.Value)
+                Plugin.Logger.LogDebug("Inited RecordedClip for recording.");
             frames = [];
         }
 
@@ -64,14 +65,16 @@ internal class RecordedClip
     {
         List<byte[]> chunks = [];
         byte[] data = File.ReadAllBytes(FilePath);
-        Plugin.Logger.LogDebug($"Reading back the file, we've got {data.Length} bytes to chunkify. That's about {Mathf.Ceil(data.Length/CHUNK_SIZE)} chunks.");
+        if(Plugin.ModConfig.ExtendedLogging.Value)
+            Plugin.Logger.LogDebug($"Reading back the file, we've got {data.Length} bytes to chunkify. That's about {Mathf.Ceil(data.Length/CHUNK_SIZE)} chunks.");
 
         int i = 0;
         while(i < data.Length) {
             int chunkSize = Mathf.Min(CHUNK_SIZE, data.Length - i);
             byte[] chunk = new byte[chunkSize];
             Array.Copy(data, i, chunk, 0, chunk.Length);
-            Plugin.Logger.LogDebug($"Created chunk {chunks.Count} with a size of {data.Length}");
+            if(Plugin.ModConfig.ExtendedLogging.Value)
+                Plugin.Logger.LogDebug($"Created chunk {chunks.Count} with a size of {data.Length}");
             chunks.Add(chunk);
 
             i += CHUNK_SIZE;

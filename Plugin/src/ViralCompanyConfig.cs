@@ -9,6 +9,10 @@ namespace ViralCompany.Configs {
         public ConfigEntry<bool> ConfigCameraEnabled { get; private set; }
         public ConfigEntry<string> ConfigCameraRarity { get; private set; }
         public ConfigEntry<bool> ConfigCameraScrapEnabled { get; private set; }   
+
+
+        public ConfigEntry<bool> ExtendedLogging { get; private set; }
+
         public ViralCompanyConfig(ConfigFile configFile) {
             ConfigCameraScrapEnabled = configFile.Bind("Scrap Options",
                                        "Camera Scrap | Enabled",
@@ -25,7 +29,11 @@ namespace ViralCompany.Configs {
             ConfigCameraCost = configFile.Bind("Shop Options",   
                                                 "Camera Item | Cost",
                                                 60, 
-                                                "Cost of Camera");     
+                                                "Cost of Camera");
+
+            ExtendedLogging = configFile.Bind("Debugging", "Extended Logging", false, "Whether ViralCompany should log out more. Some logs may be on the Debug channel.");
+
+
             ClearUnusedEntries(configFile);
             Plugin.Logger.LogInfo("Setting up config for Viral Company plugin...");
         }
