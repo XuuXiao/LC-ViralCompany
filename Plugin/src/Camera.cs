@@ -101,12 +101,12 @@ public class CameraItem : GrabbableObject {
             StartCoroutine(PowerDownCamera());
             cameraOpen = false;
             if (recordState.Value == RecordState.On) {
-                //StopRecording();
+                StopRecording();
             }
         }
         if (!isHeld || playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
         if (insertedBattery.charge <= 0) {
-            //StopRecording();
+            StopRecording();
         }
         DetectOffRecordButton();
         DetectOnRecordButton();
