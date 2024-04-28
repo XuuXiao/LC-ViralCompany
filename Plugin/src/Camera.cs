@@ -268,6 +268,8 @@ public class CameraItem : GrabbableObject {
         RoundManager.Instance.PlayAudibleNoise(transform.position, 10, 1, 0, isInShipRoom && StartOfRound.Instance.hangarDoorsClosed);
     }
     public void DoAnimation(string animationName) {
+        LogIfDebugBuild($"doing animation locally: {animationName}");
+        cameraAnimator.SetTrigger(animationName);
         if(IsHost) {
             DoAnimationClientRpc(animationName);
         } else {
@@ -282,6 +284,7 @@ public class CameraItem : GrabbableObject {
 
     [ClientRpc]
     public void DoAnimationClientRpc(string animationName) {
+        if(IsOwner) return;
         LogIfDebugBuild($"Animation: {animationName}");
         cameraAnimator.SetTrigger(animationName);
     }
