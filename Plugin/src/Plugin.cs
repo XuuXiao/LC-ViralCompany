@@ -35,6 +35,7 @@ namespace ViralCompany
 
             Logger.LogInfo("Ensuring FFmpeg is installed.");
             if(!File.Exists(Path.Combine(FFmpegEncoder.FFmpegInstallPath, "ffmpeg.exe"))) {
+                Logger.LogInfo("FFmpeg is missing! Downloading FFmpeg...");
                 Directory.CreateDirectory(FFmpegEncoder.FFmpegInstallPath);
                 await YoutubeDLSharp.Utils.DownloadFFmpeg(FFmpegEncoder.FFmpegInstallPath);
             }
@@ -43,11 +44,15 @@ namespace ViralCompany
             Logger.LogInfo("Doing patches");
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginInfo.PLUGIN_GUID);
 
+            GameObject managerObject = new GameObject("ViralCompanyDataManager");
+            DontDestroyOnLoad(managerObject);
+            managerObject.AddComponent<VideoDatabase>();
+
             // Camera Item/Scrap + keybinds
             InputActionsInstance = new IngameKeybinds();
 
             Camera = Assets.MainAssetBundle.LoadAsset<Item>("CameraObj");
-            Camera.spawnPrefab.AddComponent<VideoUploader>(); // change this :skull:
+            Camera.spawnPrefab.AddComponent<VideoUploader>(); // TODO: Add this component to the actual prefab and remove this.
 
             Utilities.FixMixerGroups(Camera.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Camera.spawnPrefab);
