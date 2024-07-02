@@ -39,7 +39,7 @@
     <PackageReference Include="FFMpegCore" Version="5.1.0" />
 	  
 	  <PackageReference Include="Evaisa.LethalLib" Version="0.15.*" />
-	  <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
+	  <PackageReference Include="LethalCompany.GameLibs.Steam" Version="55.0.0-beta.0-ngd.0" PrivateAssets="all" />
 	  <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
 	  <PackageReference Include="YoutubeDLSharp" Version="1.1.0" />
     <!-- <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" /> -->
@@ -68,8 +68,5 @@
     <Exec Command="dotnet tcli build --config-path &quot;$(ProjectDir)Thunderstore/thunderstore.toml&quot; --package-version $(Version) --package-name $(AssemblyName) --package-namespace $(ThunderstoreTeam)" />
   </Target>
 
-	<Target Name="CopyFiles" AfterTargets="NetcodePatch">
-		<Message Importance="high" Text="Copying to local lethal company install" />
-		<Copy SourceFiles="$(TargetPath)" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins" />
-	</Target>
+	
 </Project>
