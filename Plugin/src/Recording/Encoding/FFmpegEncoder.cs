@@ -63,4 +63,10 @@ internal static class FFmpegEncoder {
 
         RecordedClip.OnFinishEncoding(clip);
     }
+
+    public static async void CompileClipsToVideo(RecordedVideo video) {
+        if (video.GetAllClips().Contains(null)) throw new NullReferenceException("Not all clips have been sent!");
+        await FFMpegArguments.FromDemuxConcatInput(video.GetAllClips().Select(clip => clip.FilePath).ToArray()).OutputToFile(video.FinalVideoPath).ProcessAsynchronously();
+        Plugin.Logger.LogInfo("Finished compiling clips to video!!");
+    }
 }

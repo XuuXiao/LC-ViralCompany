@@ -2,9 +2,14 @@
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using ViralCompany.Recording;
 using ViralCompany.Recording.Audio;
+using ViralCompany.Recording.Encoding;
+using ViralCompany.Recording.Video;
 
 namespace ViralCompany.src.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
@@ -15,5 +20,16 @@ internal static class PlayerControllerPatch {
             return;
         }
         __instance.GetComponentInChildren<AudioListener>().gameObject.AddComponent<AudioRecorder>();
+    }
+
+    [HarmonyPostfix, HarmonyPatch(nameof(PlayerControllerB.Update))]
+    static void DebugExtractKey() {
+        if (Keyboard.current.f3Key.wasPressedThisFrame) {
+            foreach (RecordedVideo video in VideoDatabase.videos.Values) {
+                FFmpegEncoder.CompileClipsToVideo(video);
+            }
+
+            Process.Start(VideoRecorder.TempRecordingPath);
+        }
     }
 }
