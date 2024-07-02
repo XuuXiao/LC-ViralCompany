@@ -63,7 +63,11 @@ public class CameraItem : GrabbableObject {
 
     public override void Start() {
         base.Start();
-        
+
+        // silly patch fix because for some reason the AudioRecorder just doesn't like to get inited sometimes??
+        if (AudioRecorder.Instance == null) {
+            GameNetworkManager.Instance.localPlayerController.GetComponentInChildren<AudioListener>().gameObject.AddComponent<AudioRecorder>();
+        }
 
         Material newMaterial = new Material(Shader.Find("HDRP/Lit"));
         newMaterial.color = Color.white;
