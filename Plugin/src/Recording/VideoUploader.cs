@@ -111,7 +111,7 @@ internal class VideoUploader : NetworkBehaviour {
                 bytes.AddRange(clip.DownloadedChunkData[i]);
             }
 
-            File.WriteAllBytes("downloaded.webm", [.. bytes]); // TODO: Change to clip.FilePath
+            File.WriteAllBytes(clip.FilePath, [.. bytes]); // TODO: Change to clip.FilePath
             
             clip.DownloadedChunkData = null; // clear out of memory.
             downloadingClips.Remove(clipId);
