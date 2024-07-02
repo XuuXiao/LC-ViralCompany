@@ -49,6 +49,7 @@ internal static class FFmpegEncoder {
                     .WithCustomArgument("-map [a]")
                     .WithCustomArgument("-ac 2")
                     .WithCustomArgument("-c:v libvpx")
+                    .WithCustomArgument("-c:a libvorbis")
                     .WithVideoBitrate(RecordingSettings.BITRATE)
             )
             .LogArguments()
