@@ -36,6 +36,15 @@ public class CameraItem : GrabbableObject {
 
     [SerializeField]
     Transform backCameraPosition, frontCameraPosition;
+
+    [SerializeField]
+    float minFOV = 25;
+
+    [SerializeField]
+    float maxFOV = 60;
+
+    [SerializeField]
+    float zoomSpeed = 40;
     
     [NonSerialized]
     public Material screenMaterial;
@@ -65,7 +74,7 @@ public class CameraItem : GrabbableObject {
         Back
     }
     public NetworkVariable<RecordState> recordState = new NetworkVariable<RecordState>(RecordState.Off, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<CameraState> cameraState = new(CameraState.Front, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public CameraState cameraState = CameraState.Front;
     public override void ItemActivate(bool used, bool buttonDown = true) { }
 
     // MAKE SURE TO RESET THIS WHEN EXTRACED.
@@ -121,12 +130,6 @@ public class CameraItem : GrabbableObject {
                 ledRenderer.material = ledOnMaterial;
             }
         };
-
-        cameraState.OnValueChanged += (value, newValue) => {
-            recordingCamera.transform.parent = newValue == CameraState.Front ? frontCameraPosition : backCameraPosition;
-            recordingCamera.transform.localEulerAngles = Vector3.zero;
-            recordingCamera.transform.localPosition = Vector3.zero;
-        };
     }
 
     public override void DiscardItem() {
@@ -150,7 +153,8 @@ public class CameraItem : GrabbableObject {
     public override void EquipItem() {
         itemProperties.toolTips = [
             $"Start/Pause Recording : [{Plugin.InputActionsInstance.ToggleRecordingKey.GetBindingDisplayString().Split(' ')[0]}]",
-            $"Front/Back Camera : [{Plugin.InputActionsInstance.FlipCameraKey.GetBindingDisplayString().Split(' ')[0]}]"
+            $"Zoom Camera Out/In : [{Plugin.InputActionsInstance.ZoomOutLevelKey.GetBindingDisplayString().Split(' ')[0]}/{Plugin.InputActionsInstance.ZoomInLevelKey.GetBindingDisplayString().Split(' ')[0]}]",
+            $"Front/Back Camera : [{Plugin.InputActionsInstance.FlipCameraKey.GetBindingDisplayString().Split(' ')[0]}]",
         ];
         base.EquipItem();
     }
@@ -166,6 +170,7 @@ public class CameraItem : GrabbableObject {
         }
         DetectToggleRecording();
         DetectFlipCamera();
+        DetectZoomChange();
 
         if(isBeingUsed) {
             timeSinceLastSavedFrame -= Time.deltaTime;
@@ -178,12 +183,23 @@ public class CameraItem : GrabbableObject {
         }
     }
 
+    public void DetectZoomChange() {
+        float fov = recordingCamera.fieldOfView;
+        if (Plugin.InputActionsInstance.ZoomOutLevelKey.IsPressed()) {
+            fov += Time.deltaTime * zoomSpeed;
+        }
+        if (Plugin.InputActionsInstance.ZoomInLevelKey.IsPressed()) {
+            fov -= Time.deltaTime * zoomSpeed;
+        }
+        
+        recordingCamera.fieldOfView = Mathf.Clamp(fov, minFOV, maxFOV);
+    }
+    
     public void DetectFlipCamera() {
         if(Plugin.InputActionsInstance.FlipCameraKey.triggered) {
             // handles flipping the camera
-            cameraState.Value = cameraState.Value == CameraState.Front ? CameraState.Back : CameraState.Front;
-            // immediately flip locally
-            recordingCamera.transform.parent = cameraState.Value == CameraState.Front ? frontCameraPosition : backCameraPosition;
+            cameraState = cameraState == CameraState.Front ? CameraState.Back : CameraState.Front;
+            recordingCamera.transform.parent = cameraState == CameraState.Front ? frontCameraPosition : backCameraPosition;
             recordingCamera.transform.localEulerAngles = Vector3.zero;
             recordingCamera.transform.localPosition = Vector3.zero;
         }
