@@ -12,10 +12,9 @@ using ViralCompany.Recording;
 using ViralCompany.Recording.Audio;
 using ViralCompany.Recording.Encoding;
 using ViralCompany.Recording.Video;
-using ViralCompany.src.Recording;
 using ViralCompany.Util;
 
-namespace ViralCompany.CameraScrap;
+namespace ViralCompany;
 public class CameraItem : GrabbableObject {
     public AudioSource CameraSFX;
     public float maxLoudness;

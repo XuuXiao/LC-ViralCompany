@@ -1,7 +1,7 @@
 using LethalCompanyInputUtils.Api;
 using UnityEngine.InputSystem;
 
-namespace ViralCompany.Keybinds;
+namespace ViralCompany;
 public class IngameKeybinds : LcInputActions {
     [InputAction("<Mouse>/leftButton", Name = "ToggleRecording")]
     public InputAction ToggleRecordingKey { get; set; }

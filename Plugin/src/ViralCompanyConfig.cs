@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Configuration;
 
-namespace ViralCompany.Configs {
+namespace ViralCompany {
     public class ViralCompanyConfig {
         public ConfigEntry<int> ConfigCameraCost { get; private set; }
         public ConfigEntry<bool> ConfigCameraEnabled { get; private set; }

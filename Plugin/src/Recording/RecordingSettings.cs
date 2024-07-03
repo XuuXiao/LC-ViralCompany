@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ViralCompany.src.Recording;
+namespace ViralCompany.Recording;
 internal static class RecordingSettings {
     // Recording Settings
     internal const int FRAMERATE = 24;

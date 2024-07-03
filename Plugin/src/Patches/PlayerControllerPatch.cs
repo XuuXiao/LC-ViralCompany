@@ -11,7 +11,7 @@ using ViralCompany.Recording.Audio;
 using ViralCompany.Recording.Encoding;
 using ViralCompany.Recording.Video;
 
-namespace ViralCompany.src.Patches;
+namespace ViralCompany.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
 internal static class PlayerControllerPatch {
     [HarmonyPostfix, HarmonyPatch(nameof(PlayerControllerB.ConnectClientToPlayerObject))]

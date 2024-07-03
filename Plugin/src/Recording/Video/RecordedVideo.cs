@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using UnityEngine.Timeline;
-using ViralCompany.src.Recording;
-using YoutubeDLSharp.Metadata;
 
 namespace ViralCompany.Recording.Video;
 internal class RecordedVideo
