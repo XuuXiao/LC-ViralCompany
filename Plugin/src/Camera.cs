@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using Dissonance;
 using Dissonance.Audio.Capture;
 using GameNetcodeStuff;
@@ -9,6 +10,7 @@ using UnityEngine.InputSystem;
 using ViralCompany;
 using ViralCompany.Recording;
 using ViralCompany.Recording.Audio;
+using ViralCompany.Recording.Encoding;
 using ViralCompany.Recording.Video;
 using ViralCompany.src.Recording;
 using ViralCompany.Util;
@@ -172,6 +174,13 @@ public class CameraItem : GrabbableObject {
         DetectFlipCamera();
         DetectZoomChange();
 
+        if (Keyboard.current.f3Key.wasPressedThisFrame) {
+            FFmpegEncoder.CompileClipsToVideo(Recorder.Video);
+            StartNewVideo();
+
+            Process.Start(VideoRecorder.TempRecordingPath);
+        }
+        
         if(isBeingUsed) {
             timeSinceLastSavedFrame -= Time.deltaTime;
 

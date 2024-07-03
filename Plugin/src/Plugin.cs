@@ -52,6 +52,7 @@ namespace ViralCompany
             InputActionsInstance = new IngameKeybinds();
 
             Camera = Assets.MainAssetBundle.LoadAsset<Item>("CameraObj");
+            
             Camera.spawnPrefab.AddComponent<VideoUploader>(); // TODO: Add this component to the actual prefab and remove this.
 
             Utilities.FixMixerGroups(Camera.spawnPrefab);

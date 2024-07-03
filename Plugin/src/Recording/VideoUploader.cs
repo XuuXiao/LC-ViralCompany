@@ -12,7 +12,7 @@ using YoutubeDLSharp.Metadata;
 
 namespace ViralCompany.Recording;
 internal class VideoUploader : NetworkBehaviour {
-    const float DELAY_BETWEEN_PACKETS = 0.5f;
+    const float DELAY_BETWEEN_PACKETS = 0.25f;
 
     internal static VideoUploader Instance { get; private set; }
 
@@ -21,12 +21,11 @@ internal class VideoUploader : NetworkBehaviour {
 
     void Awake() {
         Instance = this;
-        RecordedClip.OnFinishEncoding += HandleClipEncoded;
     }
 
     void OnDisable() {
-        Instance = null;
-        RecordedClip.OnFinishEncoding -= HandleClipEncoded;
+        if(Instance == this)
+            Instance = null;
     }
 
     internal void HandleClipEncoded(RecordedClip clip) {
@@ -65,7 +64,7 @@ internal class VideoUploader : NetworkBehaviour {
         uploadingClips.Remove(clip.ClipID);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     internal void StartSendingClipServerRpc(string videoID, string clipID, int chunkCount) {
         StartSendingClipClientRpc(videoID, clipID, chunkCount);
     }
@@ -89,7 +88,7 @@ internal class VideoUploader : NetworkBehaviour {
     }
 
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     internal void SendChunkServerRpc(string clipId, int chunkID, byte[] data) {
         SendChunkClientRpc(clipId, chunkID, data);
     }

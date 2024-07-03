@@ -60,8 +60,8 @@ internal static class FFmpegEncoder {
         File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"));
         File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.localMic.wav"));
         File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.gameAudio.wav"));
-
-        RecordedClip.OnFinishEncoding(clip);
+        
+        VideoUploader.Instance.HandleClipEncoded(clip);
     }
 
     public static async void CompileClipsToVideo(RecordedVideo video) {
