@@ -27,6 +27,8 @@ namespace ViralCompany
         internal static IngameKeybinds InputActionsInstance;
         public static ViralCompanyConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
+        internal static GameObject UploaderPrefab;
+        
         private async void Awake() {
             Logger = base.Logger;
             // This should be ran before Network Prefabs are registered.
@@ -48,12 +50,12 @@ namespace ViralCompany
             DontDestroyOnLoad(managerObject);
             managerObject.AddComponent<VideoDatabase>();
 
+            UploaderPrefab = NetworkPrefabs.CreateNetworkPrefab("ViralCompanyUploadHandler");
+            UploaderPrefab.AddComponent<VideoUploader>();
+
             // Camera Item/Scrap + keybinds
             InputActionsInstance = new IngameKeybinds();
-
             Camera = Assets.MainAssetBundle.LoadAsset<Item>("CameraObj");
-            
-            Camera.spawnPrefab.AddComponent<VideoUploader>(); // TODO: Add this component to the actual prefab and remove this.
 
             Utilities.FixMixerGroups(Camera.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Camera.spawnPrefab);

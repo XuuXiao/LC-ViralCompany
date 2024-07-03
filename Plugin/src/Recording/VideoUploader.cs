@@ -74,7 +74,7 @@ internal class VideoUploader : NetworkBehaviour {
         if(downloadingClips.ContainsKey(clipId)) {
             Plugin.Logger.LogWarning($"WOAH! Tried to initalise sending chunk data for '{clipId}' when we're already recieving that!");
         }
-        if(IsOwner) return;
+        if(uploadingClips.Contains(clipId)) return;
         if(Plugin.ModConfig.ExtendedLogging.Value)
             Plugin.Logger.LogInfo($"About to recieve clip chunk data, videoID: {videoID}, clipID: {clipId}, {chunkCount} chunks");
         RecordedVideo video = VideoDatabase.videos[videoID];
@@ -96,7 +96,7 @@ internal class VideoUploader : NetworkBehaviour {
     [ClientRpc]
     internal void SendChunkClientRpc(string clipId, int chunkID, byte[] data) {
         Plugin.Logger.LogDebug($"IsOwner of VideoUploader? {IsOwner}");
-        if(IsOwner) return;
+        if(uploadingClips.Contains(clipId) || !downloadingClips.ContainsKey(clipId)) return;
         if(Plugin.ModConfig.ExtendedLogging.Value)
             Plugin.Logger.LogInfo($"Recieved chunk {chunkID} data for '{clipId}'! data.Length: {data.Length}");
 
