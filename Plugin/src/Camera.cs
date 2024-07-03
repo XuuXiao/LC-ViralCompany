@@ -25,6 +25,14 @@ public class CameraItem : GrabbableObject {
     public AudioClip errorSound;
     public Animator cameraAnimator;
     public AudioClip recordingFinishedSound;
+    
+    // LED
+    [SerializeField]
+    Renderer ledRenderer;
+
+    [SerializeField]
+    Material ledOffMaterial, ledOnMaterial;
+    
     [NonSerialized]
     public Material screenMaterial;
     [NonSerialized]
@@ -92,6 +100,15 @@ public class CameraItem : GrabbableObject {
             LogIfDebugBuild("'Screen' GameObject not found in the hierarchy.");
         }
         screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
+        
+        // update recording led
+        recordState.OnValueChanged += (value, newValue) => {
+            if (newValue == RecordState.Off) {
+                ledRenderer.material = ledOffMaterial;
+            } else {
+                ledRenderer.material = ledOnMaterial;
+            }
+        };
     }
 
     public override void Update() {
