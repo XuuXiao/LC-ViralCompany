@@ -166,7 +166,13 @@ public class CameraItem : GrabbableObject {
         if (recordState.Value == RecordState.Off || recordState.Value == RecordState.Finished) {
             isBeingUsed = false;
         }
-        if (!isHeld || !IsOwner) return;
+        if(!IsOwner || !isHeld) return;
+        if (!isPocketed) {
+            if(Recorder == null || recordState.Value != RecordState.On) return;
+            StopRecording();
+            LogIfDebugBuild("Recording Stopped");
+            return;
+        }
         if (insertedBattery.charge <= 0) {
             StopRecording();
         }
