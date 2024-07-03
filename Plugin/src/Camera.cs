@@ -33,6 +33,9 @@ public class CameraItem : GrabbableObject {
 
     [SerializeField]
     Material ledOffMaterial, ledOnMaterial;
+
+    [SerializeField]
+    Transform backCameraPosition, frontCameraPosition;
     
     [NonSerialized]
     public Material screenMaterial;
@@ -56,13 +59,20 @@ public class CameraItem : GrabbableObject {
         On,
         Finished,
     }
+
+    public enum CameraState {
+        Front,
+        Back
+    }
     public NetworkVariable<RecordState> recordState = new NetworkVariable<RecordState>(RecordState.Off, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<CameraState> cameraState = new(CameraState.Front, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public override void ItemActivate(bool used, bool buttonDown = true) { }
 
     // MAKE SURE TO RESET THIS WHEN EXTRACED.
     internal VideoRecorder Recorder { get; private set; }
 
     float timeSinceLastSavedFrame = 0;
+    Camera recordingCamera;
 
     void StartNewVideo() {
         Recorder = new VideoRecorder();
@@ -83,9 +93,10 @@ public class CameraItem : GrabbableObject {
 
         renderTexture = new RenderTexture(RecordingSettings.RESOLUTION, RecordingSettings.RESOLUTION, 0);
 
-        Camera cameraComponent = this.transform.Find("Camera").GetComponent<Camera>();
-        cameraComponent.targetTexture = renderTexture;
-
+        recordingCamera = GetComponentInChildren<Camera>();
+        recordingCamera.targetTexture = renderTexture;
+        recordingCamera.cullingMask = GameNetworkManager.Instance.localPlayerController.gameplayCamera.cullingMask;
+        
         newMaterial.mainTexture = renderTexture;
 
         screenTransform = this.transform.Find("Armature").Find("Bone").Find("Bone.001").Find("Bone.002").Find("Bone.003").Find("Bone.004").Find("Bone.004_end").Find("Screen");
@@ -109,6 +120,12 @@ public class CameraItem : GrabbableObject {
             } else {
                 ledRenderer.material = ledOnMaterial;
             }
+        };
+
+        cameraState.OnValueChanged += (value, newValue) => {
+            recordingCamera.transform.parent = newValue == CameraState.Front ? frontCameraPosition : backCameraPosition;
+            recordingCamera.transform.localEulerAngles = Vector3.zero;
+            recordingCamera.transform.localPosition = Vector3.zero;
         };
     }
 
@@ -148,6 +165,7 @@ public class CameraItem : GrabbableObject {
             StopRecording();
         }
         DetectToggleRecording();
+        DetectFlipCamera();
 
         if(isBeingUsed) {
             timeSinceLastSavedFrame -= Time.deltaTime;
@@ -158,12 +176,19 @@ public class CameraItem : GrabbableObject {
                 AudioRecorder.Instance.Flush();
             }
         }
-
-        if(Plugin.InputActionsInstance.FlipCameraKey.triggered) {
-            transform.Find("Camera").forward = -transform.Find("Camera").forward;
-        }
     }
 
+    public void DetectFlipCamera() {
+        if(Plugin.InputActionsInstance.FlipCameraKey.triggered) {
+            // handles flipping the camera
+            cameraState.Value = cameraState.Value == CameraState.Front ? CameraState.Back : CameraState.Front;
+            // immediately flip locally
+            recordingCamera.transform.parent = cameraState.Value == CameraState.Front ? frontCameraPosition : backCameraPosition;
+            recordingCamera.transform.localEulerAngles = Vector3.zero;
+            recordingCamera.transform.localPosition = Vector3.zero;
+        }
+    }
+    
     public void DetectToggleRecording() {
         if (Plugin.InputActionsInstance.ToggleRecordingKey.triggered && cameraOpen) {
             if (recordState.Value == RecordState.On) {

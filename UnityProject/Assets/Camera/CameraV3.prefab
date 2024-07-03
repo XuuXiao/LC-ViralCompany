@@ -350,13 +350,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047048180671796844}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.52, y: 0, z: -0}
-  m_LocalScale: {x: 0.1, y: 0.099999994, z: 0.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.09999999, y: 0.099999994, z: 0.09999999}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3923302709179768146}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_Father: {fileID: 1595486275279324071}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &9207563273340998049
 Camera:
   m_ObjectHideFlags: 0
@@ -537,6 +537,37 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!1 &2183823164749836809
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5255898947442199074}
+  m_Layer: 6
+  m_Name: BackCameraPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5255898947442199074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2183823164749836809}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -1, y: 0, z: -3.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3923302709179768146}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &2240872899211071690
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,6 +675,38 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &4633338224639750176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1595486275279324071}
+  m_Layer: 6
+  m_Name: FrontCameraPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1595486275279324071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4633338224639750176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.52, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7543620489943218892}
+  m_Father: {fileID: 3923302709179768146}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &6670039472414485463
 GameObject:
   m_ObjectHideFlags: 0
@@ -1261,7 +1324,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a37103fa65c6aa548957f2be84cc030b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7543620489943218892}
+      addedObject: {fileID: 1595486275279324071}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a37103fa65c6aa548957f2be84cc030b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5255898947442199074}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a37103fa65c6aa548957f2be84cc030b,
         type: 3}
       insertIndex: -1
@@ -1529,9 +1596,13 @@ MonoBehaviour:
   ledRenderer: {fileID: 76883024384649109}
   ledOffMaterial: {fileID: 2100000, guid: 0dae14eb7e9f6024cb7e5b1fe94444aa, type: 2}
   ledOnMaterial: {fileID: 2100000, guid: 1bb1d2b792f160243b556347cb59541b, type: 2}
+  backCameraPosition: {fileID: 5255898947442199074}
+  frontCameraPosition: {fileID: 1595486275279324071}
   openCameraAnimation: {fileID: 7400000, guid: 1178614eb4d390e469bd22076256b411, type: 2}
   renderTexture: {fileID: 8400000, guid: 37d0eed6ffcb7324d824d4b64bf143f5, type: 2}
   recordState:
+    m_InternalValue: 0
+  cameraState:
     m_InternalValue: 0
 --- !u!4 &7024704440533431315 stripped
 Transform:
