@@ -5,6 +5,7 @@ using Dissonance.Audio.Capture;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using ViralCompany;
 using ViralCompany.Recording;
 using ViralCompany.Recording.Audio;
@@ -111,27 +112,42 @@ public class CameraItem : GrabbableObject {
         };
     }
 
+    public override void DiscardItem() {
+        base.DiscardItem();
+        DoAnimation("closeCamera");
+        StartCoroutine(PowerDownCamera());
+        cameraOpen = false;
+        if (recordState.Value == RecordState.On) {
+            StopRecording();
+        }
+    }
+
+    public override void GrabItem() {
+        base.GrabItem();
+        DoAnimation("openCamera");
+        StartCoroutine(StartUpCamera());
+        cameraOpen = true;
+    }
+
+    // Update Tooltips
+    public override void EquipItem() {
+        itemProperties.toolTips = [
+            $"Start/Pause Recording : [{Plugin.InputActionsInstance.ToggleRecordingKey.GetBindingDisplayString().Split(' ')[0]}]",
+            $"Front/Back Camera : [{Plugin.InputActionsInstance.FlipCameraKey.GetBindingDisplayString().Split(' ')[0]}]"
+        ];
+        base.EquipItem();
+    }
+
     public override void Update() {
         base.Update();
         if (recordState.Value == RecordState.Off || recordState.Value == RecordState.Finished) {
             isBeingUsed = false;
         }
-        if (!isHeld && cameraOpen) {
-            DoAnimation("closeCamera");
-            screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
-            StartCoroutine(PowerDownCamera());
-            cameraOpen = false;
-            if (recordState.Value == RecordState.On) {
-                StopRecording();
-            }
-        }
-        if (!isHeld || playerHeldBy != GameNetworkManager.Instance.localPlayerController) return;
+        if (!isHeld || !IsOwner) return;
         if (insertedBattery.charge <= 0) {
             StopRecording();
         }
-        DetectOffRecordButton();
-        DetectOnRecordButton();
-        DetectOpenCloseButton();
+        DetectToggleRecording();
 
         if(isBeingUsed) {
             timeSinceLastSavedFrame -= Time.deltaTime;
@@ -148,42 +164,18 @@ public class CameraItem : GrabbableObject {
         }
     }
 
-    public void DetectOpenCloseButton() {
-        if(!Plugin.InputActionsInstance.OpenCloseCameraKey.triggered) return;
-        //if(!cooldownPassed) return;
-
-        if (cameraOpen) {
-            screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
-            cameraOpen = false;
-            cooldownPassed = false;
-            StartCoroutine(CooldownPassing());
-            DoAnimation("closeCamera");
-            return;
-        } else {
-            cameraOpen = true;
-            cooldownPassed = false;
-            StartCoroutine(StartUpCamera());
-            StartCoroutine(CooldownPassing());
-            DoAnimation("openCamera");
-            return;
+    public void DetectToggleRecording() {
+        if (Plugin.InputActionsInstance.ToggleRecordingKey.triggered && cameraOpen) {
+            if (recordState.Value == RecordState.On) {
+                StopRecording();
+                LogIfDebugBuild("Recording Stopped");
+            } else {
+                StartRecording(); 
+                LogIfDebugBuild("Recording started");
+            }
         }
     }
-    public void DetectOnRecordButton() {
-        if (Plugin.InputActionsInstance.StartRecordKey.triggered && recordState.Value == RecordState.Off && cameraOpen) {
-            StartRecording();
-            LogIfDebugBuild("Recording started");
-            return;
-        }
-        return;
-    }
-    public void DetectOffRecordButton() {
-        if (Plugin.InputActionsInstance.StopRecordKey.triggered && recordState.Value == RecordState.On && cameraOpen) {
-            StopRecording();
-            LogIfDebugBuild("Recording Stopped");
-            return;
-        }
-        return;
-    }
+    
     public void StartRecording() {
         recordState.Value = RecordState.On;
         PlaySoundByID("startRecord");
@@ -198,19 +190,17 @@ public class CameraItem : GrabbableObject {
     }
 
     public void StopRecording() {
+        isBeingUsed = false;
+        Recorder.EndClip();
+        
         if (insertedBattery.charge <= 0) {
             recordState.Value = RecordState.Finished;
             PlaySoundByID("recordingFinished");
             LogIfDebugBuild("Recording finished");
-            isBeingUsed = false;
             return;
         }
         recordState.Value = RecordState.Off;
         PlaySoundByID("stopRecord");
-        isBeingUsed = false;
-        //Play off sound
-
-        Recorder.EndClip();
     }
 
     public void PlaySoundByID(string soundID) {
@@ -237,17 +227,14 @@ public class CameraItem : GrabbableObject {
     IEnumerator StartUpCamera() {
         yield return new WaitForSeconds(openCameraAnimation.length/3);
         screenTransform.GetComponent<MeshRenderer>().material.color = Color.white;
-        StopCoroutine(StartUpCamera());
     }
     IEnumerator PowerDownCamera() {
         yield return new WaitForSeconds(openCameraAnimation.length/3);
         screenTransform.GetComponent<MeshRenderer>().material.color = Color.black;
-        StopCoroutine(PowerDownCamera());
     }
     IEnumerator CooldownPassing() {
         yield return new WaitForSeconds(2f);
         cooldownPassed = true;
-        StopCoroutine(CooldownPassing());
     }
     public override void ChargeBatteries()
     {

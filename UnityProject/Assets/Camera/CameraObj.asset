@@ -50,10 +50,7 @@ MonoBehaviour:
   syncInteractLRFunction: 1
   saveItemVariable: 0
   isDefensiveWeapon: 0
-  toolTips:
-  - 'Open/Close Camera : [LMB]'
-  - 'Start Recording : [P]'
-  - 'Pause Recording : [O]'
+  toolTips: []
   verticalOffset: 0.1
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
