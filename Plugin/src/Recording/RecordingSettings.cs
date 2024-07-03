@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ViralCompany.src.Recording;
+namespace ViralCompany.Recording;
 internal static class RecordingSettings {
     // Recording Settings
     internal const int FRAMERATE = 24;
-    internal const int RESOLUTION = 350;
-    internal const int BITRATE = 528;
+    internal const int RESOLUTION = 360;
+    internal const int BITRATE = 512;
 }

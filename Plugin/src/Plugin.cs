@@ -4,13 +4,10 @@ using BepInEx;
 using LethalLib.Modules;
 using BepInEx.Logging;
 using System.IO;
-using ViralCompany.Configs;
 using System.Collections.Generic;
 using static LethalLib.Modules.Levels;
 using System.Linq;
 using static LethalLib.Modules.Items;
-using ViralCompany.Keybinds;
-using YoutubeDLSharp;
 using FFMpegCore;
 using HarmonyLib;
 using ViralCompany.Recording.Encoding;
@@ -27,6 +24,8 @@ namespace ViralCompany
         internal static IngameKeybinds InputActionsInstance;
         public static ViralCompanyConfig ModConfig { get; private set; } // prevent from accidently overriding the config
 
+        internal static GameObject UploaderPrefab;
+        
         private async void Awake() {
             Logger = base.Logger;
             // This should be ran before Network Prefabs are registered.
@@ -48,11 +47,12 @@ namespace ViralCompany
             DontDestroyOnLoad(managerObject);
             managerObject.AddComponent<VideoDatabase>();
 
+            UploaderPrefab = NetworkPrefabs.CreateNetworkPrefab("ViralCompanyUploadHandler");
+            UploaderPrefab.AddComponent<VideoUploader>();
+
             // Camera Item/Scrap + keybinds
             InputActionsInstance = new IngameKeybinds();
-
             Camera = Assets.MainAssetBundle.LoadAsset<Item>("CameraObj");
-            Camera.spawnPrefab.AddComponent<VideoUploader>(); // TODO: Add this component to the actual prefab and remove this.
 
             Utilities.FixMixerGroups(Camera.spawnPrefab);
             NetworkPrefabs.RegisterNetworkPrefab(Camera.spawnPrefab);

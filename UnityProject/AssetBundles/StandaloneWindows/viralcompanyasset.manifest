@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1393711155
+CRC: 1678440404
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 96ec989460c76a89dbac1f90b1d1e663
+    Hash: c5797c776843c7a4c3436db37cd88ebf
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 51a176e300291f5a54e2d739292612ca
+    Hash: 060c3af803504dde3f763abf781b4f97
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 96ec989460c76a89dbac1f90b1d1e663
+    Hash: c5797c776843c7a4c3436db37cd88ebf
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -64,6 +64,8 @@ ClassTypes:
   Script: {fileID: 11500000, guid: d3cecf05b78b173605122a700874719c, type: 3}
 - Class: 115
   Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
 - Class: 137
   Script: {instanceID: 0}
 - Class: 241
@@ -77,6 +79,8 @@ SerializeReferenceClassIdentifiers:
   ClassName: Battery
 - AssemblyName: Assembly-CSharp
   ClassName: CompatibleNoun
+- AssemblyName: Unity.Netcode.Runtime
+  ClassName: Unity.Netcode.NetworkVariable`1[ViralCompany.CameraScrap.CameraItem/CameraState]
 - AssemblyName: Unity.Netcode.Runtime
   ClassName: Unity.Netcode.NetworkVariable`1[ViralCompany.CameraScrap.CameraItem/RecordState]
 - AssemblyName: Unity.RenderPipelines.Core.Runtime

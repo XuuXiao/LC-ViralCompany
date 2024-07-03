@@ -13,7 +13,6 @@ using UnityEngine;
 using ViralCompany.Recording;
 using ViralCompany.Recording.Encoding;
 using ViralCompany.Recording.Video;
-using ViralCompany.src.Recording;
 using ViralCompany.Util;
 
 namespace ViralCompany.Recording.Encoding;
@@ -49,6 +48,7 @@ internal static class FFmpegEncoder {
                     .WithCustomArgument("-map [a]")
                     .WithCustomArgument("-ac 2")
                     .WithCustomArgument("-c:v libvpx")
+                    .WithCustomArgument("-c:a libvorbis")
                     .WithVideoBitrate(RecordingSettings.BITRATE)
             )
             .LogArguments()
@@ -59,7 +59,13 @@ internal static class FFmpegEncoder {
         File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.temp.webm"));
         File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.localMic.wav"));
         File.Delete(Path.Combine(clip.Video.FolderPath, $"{clip.ClipID}.gameAudio.wav"));
+        
+        VideoUploader.Instance.HandleClipEncoded(clip);
+    }
 
-        RecordedClip.OnFinishEncoding(clip);
+    public static async void CompileClipsToVideo(RecordedVideo video) {
+        if (video.GetAllClips().Contains(null)) throw new NullReferenceException("Not all clips have been sent!");
+        await FFMpegArguments.FromDemuxConcatInput(video.GetAllClips().Select(clip => clip.FilePath).ToArray()).OutputToFile(video.FinalVideoPath).ProcessAsynchronously();
+        Plugin.Logger.LogInfo("Finished compiling clips to video!!");
     }
 }

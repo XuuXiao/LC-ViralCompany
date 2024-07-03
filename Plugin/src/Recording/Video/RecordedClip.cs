@@ -11,7 +11,7 @@ using ViralCompany.Recording.Encoding;
 namespace ViralCompany.Recording.Video;
 internal class RecordedClip
 {
-    const int CHUNK_SIZE = 30_000;
+    const int CHUNK_SIZE = 50_000;
 
     public string FilePath
     {
@@ -27,8 +27,6 @@ internal class RecordedClip
 
     public RecordedVideo Video { get; private set; }
     List<Texture2DVideoFrame> frames;
-
-    internal static Action<RecordedClip> OnFinishEncoding = delegate { };
 
     // maybe move this into a seperate class/struct?
     internal Dictionary<int, byte[]> DownloadedChunkData;

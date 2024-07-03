@@ -7,12 +7,11 @@ using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 using ViralCompany.Recording.Video;
-using ViralCompany.src.Recording;
 using YoutubeDLSharp.Metadata;
 
 namespace ViralCompany.Recording;
 internal class VideoUploader : NetworkBehaviour {
-    const float DELAY_BETWEEN_PACKETS = 0.5f;
+    const float DELAY_BETWEEN_PACKETS = 0.25f;
 
     internal static VideoUploader Instance { get; private set; }
 
@@ -21,12 +20,11 @@ internal class VideoUploader : NetworkBehaviour {
 
     void Awake() {
         Instance = this;
-        RecordedClip.OnFinishEncoding += HandleClipEncoded;
     }
 
     void OnDisable() {
-        Instance = null;
-        RecordedClip.OnFinishEncoding -= HandleClipEncoded;
+        if(Instance == this)
+            Instance = null;
     }
 
     internal void HandleClipEncoded(RecordedClip clip) {
@@ -65,7 +63,7 @@ internal class VideoUploader : NetworkBehaviour {
         uploadingClips.Remove(clip.ClipID);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     internal void StartSendingClipServerRpc(string videoID, string clipID, int chunkCount) {
         StartSendingClipClientRpc(videoID, clipID, chunkCount);
     }
@@ -75,7 +73,7 @@ internal class VideoUploader : NetworkBehaviour {
         if(downloadingClips.ContainsKey(clipId)) {
             Plugin.Logger.LogWarning($"WOAH! Tried to initalise sending chunk data for '{clipId}' when we're already recieving that!");
         }
-        if(IsOwner) return;
+        if(uploadingClips.Contains(clipId)) return;
         if(Plugin.ModConfig.ExtendedLogging.Value)
             Plugin.Logger.LogInfo($"About to recieve clip chunk data, videoID: {videoID}, clipID: {clipId}, {chunkCount} chunks");
         RecordedVideo video = VideoDatabase.videos[videoID];
@@ -89,7 +87,7 @@ internal class VideoUploader : NetworkBehaviour {
     }
 
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     internal void SendChunkServerRpc(string clipId, int chunkID, byte[] data) {
         SendChunkClientRpc(clipId, chunkID, data);
     }
@@ -97,7 +95,7 @@ internal class VideoUploader : NetworkBehaviour {
     [ClientRpc]
     internal void SendChunkClientRpc(string clipId, int chunkID, byte[] data) {
         Plugin.Logger.LogDebug($"IsOwner of VideoUploader? {IsOwner}");
-        if(IsOwner) return;
+        if(uploadingClips.Contains(clipId) || !downloadingClips.ContainsKey(clipId)) return;
         if(Plugin.ModConfig.ExtendedLogging.Value)
             Plugin.Logger.LogInfo($"Recieved chunk {chunkID} data for '{clipId}'! data.Length: {data.Length}");
 
@@ -111,7 +109,7 @@ internal class VideoUploader : NetworkBehaviour {
                 bytes.AddRange(clip.DownloadedChunkData[i]);
             }
 
-            File.WriteAllBytes("downloaded.webm", [.. bytes]); // TODO: Change to clip.FilePath
+            File.WriteAllBytes(clip.FilePath, [.. bytes]); // TODO: Change to clip.FilePath
             
             clip.DownloadedChunkData = null; // clear out of memory.
             downloadingClips.Remove(clipId);

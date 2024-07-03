@@ -5,8 +5,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
-using ViralCompany.Configs;
-using static UnityEngine.UI.Image;
 using Random = System.Random;
 
 namespace ViralCompany.Util;

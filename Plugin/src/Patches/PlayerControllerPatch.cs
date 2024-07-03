@@ -2,11 +2,16 @@
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using ViralCompany.Recording;
 using ViralCompany.Recording.Audio;
+using ViralCompany.Recording.Encoding;
+using ViralCompany.Recording.Video;
 
-namespace ViralCompany.src.Patches;
+namespace ViralCompany.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
 internal static class PlayerControllerPatch {
     [HarmonyPostfix, HarmonyPatch(nameof(PlayerControllerB.ConnectClientToPlayerObject))]

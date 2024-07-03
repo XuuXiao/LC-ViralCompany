@@ -1,15 +1,16 @@
 using LethalCompanyInputUtils.Api;
 using UnityEngine.InputSystem;
 
-namespace ViralCompany.Keybinds;
+namespace ViralCompany;
 public class IngameKeybinds : LcInputActions {
-    [InputAction("<Keyboard>/o", Name = "StopRecord")]
-    public InputAction StopRecordKey { get; set; }
-    [InputAction("<Keyboard>/p", Name = "StartRecord")]
-    public InputAction StartRecordKey { get; set; }
-    [InputAction("<Mouse>/leftButton", Name = "OpenCloseCamera")]
-    public InputAction OpenCloseCameraKey { get; set; }
+    [InputAction("<Mouse>/leftButton", Name = "ToggleRecording")]
+    public InputAction ToggleRecordingKey { get; set; }
 
-    [InputAction("<Mouse>/r", Name = "FlipCamera")]
+    [InputAction("<Keyboard>/r", Name = "FlipCamera")]
     public InputAction FlipCameraKey { get; set; }
+    
+    [InputAction("<Keyboard>/q", Name = "ZoomOut")]
+    public InputAction ZoomOutLevelKey { get; set; }
+    [InputAction("<Keyboard>/e", Name = "ZoomIn")]
+    public InputAction ZoomInLevelKey { get; set; }
 }

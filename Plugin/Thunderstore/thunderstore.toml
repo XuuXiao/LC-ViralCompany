@@ -12,6 +12,8 @@ containsNsfwContent = false
 BepInEx-BepInExPack = "5.4.2100"
 Evaisa-LethalLib = "0.15.0"
 Rune580-LethalCompany_InputUtils = "0.7.3"
+dotnet_lethal_company-FFMpegCore = "5.1.1"
+Lordfirespeed-YoutubeDLSharp = "1.1.0"
 
 [build]
 icon = "./icon.png"
