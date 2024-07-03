@@ -167,7 +167,7 @@ public class CameraItem : GrabbableObject {
             isBeingUsed = false;
         }
         if(!IsOwner || !isHeld) return;
-        if (!isPocketed) {
+        if (isPocketed) {
             if(Recorder == null || recordState.Value != RecordState.On) return;
             StopRecording();
             LogIfDebugBuild("Recording Stopped");
