@@ -6,7 +6,7 @@ using System.Linq;
 namespace ViralCompany.Recording.Video;
 internal class RecordedVideo
 {
-    Dictionary<string, RecordedClip> Clips = [];
+    private Dictionary<string, RecordedClip> Clips = [];
 
     public string VideoID { get; private set; }
     public string FolderPath
@@ -32,8 +32,15 @@ internal class RecordedVideo
             List<RecordedClip> clips = GetAllClips();
             foreach (RecordedClip clip in clips)
             {
-                if (clip == null) return false;
-                if (!clip.IsValid) return false;
+                if (clip == null)
+                {
+                    return false;
+                }
+
+                if (!clip.IsValid)
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -45,6 +52,7 @@ internal class RecordedVideo
         this.VideoID = VideoID;
 
         // make sure that the directory exists lol
+        Plugin.Logger.LogInfo($"Creating directory for video: {FolderPath}");
         Directory.CreateDirectory(FolderPath);
         VideoDatabase.videos.Add(VideoID, this);
     }
@@ -76,8 +84,15 @@ internal class RecordedVideo
 
     public void StoreClip(string clipID, RecordedClip clip)
     {
-        if (!Clips.ContainsKey(clipID)) throw new ArgumentOutOfRangeException($"ClipID: '{clipID}' has not been registered and yet it was downloaded?!?!");
-        if (Clips[clipID] != null) throw new ArgumentException($"ClipID: '{clipID}' has already been sent and added to the recorded video!");
+        if (!Clips.ContainsKey(clipID))
+        {
+            throw new ArgumentOutOfRangeException($"ClipID: '{clipID}' has not been registered and yet it was downloaded?!?!");
+        }
+
+        if (Clips[clipID] != null)
+        {
+            throw new ArgumentException($"ClipID: '{clipID}' has already been sent and added to the recorded video!");
+        }
 
         Clips[clipID] = clip;
         Plugin.Logger.LogDebug($"Sucessfully added clip: '{clipID}' to recorded video.");

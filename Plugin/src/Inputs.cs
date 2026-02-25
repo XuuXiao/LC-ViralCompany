@@ -2,7 +2,8 @@ using LethalCompanyInputUtils.Api;
 using UnityEngine.InputSystem;
 
 namespace ViralCompany;
-public class IngameKeybinds : LcInputActions {
+public class IngameKeybinds : LcInputActions
+{
     [InputAction("<Mouse>/leftButton", Name = "ToggleRecording")]
     public InputAction ToggleRecordingKey { get; set; }
 
@@ -13,4 +14,7 @@ public class IngameKeybinds : LcInputActions {
     public InputAction ZoomOutLevelKey { get; set; }
     [InputAction("<Keyboard>/e", Name = "ZoomIn")]
     public InputAction ZoomInLevelKey { get; set; }
+
+    [InputAction("<Keyboard>/f3", Name = "NewVideo")]
+    public InputAction NewVideoKey { get; set; }
 }

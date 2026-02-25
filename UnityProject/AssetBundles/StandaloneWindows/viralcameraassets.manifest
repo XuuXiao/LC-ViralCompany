@@ -1,0 +1,116 @@
+ManifestFileVersion: 0
+CRC: 4009469335
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d3d0ec8b38993dc7bef38129dc43c164
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: de5e739513a4d5f1ddf7f3a3c37b0ff1
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: d3d0ec8b38993dc7bef38129dc43c164
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 20
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 84
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 23c1ce4fb46143f46bc5cb5224c934f6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c30496d6ae6d6f907456e10a94e01ec6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+- Class: 114
+  Script: {fileID: -1384556892, guid: f99285952e59b614cacb9ba5ddeb17df, type: 3}
+- Class: 114
+  Script: {fileID: 466683445, guid: ff85a20c8655dd24e9fce311d21362ba, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 241
+  Script: {instanceID: 0}
+- Class: 243
+  Script: {instanceID: 0}
+- Class: 245
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: Battery
+- AssemblyName: Unity.RenderPipelines.Core.Runtime
+  ClassName: UnityEngine.Rendering.BitArray128
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.BoolScalableSettingValue
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.FrameSettings
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.FrameSettingsOverrideMask
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.HDPhysicalCamera
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.IntScalableSettingValue
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.ObsoleteFrameSettings
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.ObsoleteLightLoopSettings
+- AssemblyName: com.github.teamxiaolan.dawnlib.dusk
+  ClassName: Dusk.ShopItemPreset
+- AssemblyName: com.github.teamxiaolan.dawnlib
+  ClassName: Dawn.NamespacedKey
+Assets:
+- Assets/Camera/Materials/Body.mat
+- Assets/Camera/Materials/Screen.mat
+- Assets/Camera/CameraItemDefinition.asset
+- Assets/Camera/Materials/CameraFaces.mat
+- Assets/Camera/Animations/CameraOpenClose.anim
+- Assets/Camera/Materials/ViralCompanyRecorderOverlay.png
+- Assets/Camera/CameraObj.asset
+- Assets/Camera/Models/TexCamera.mat
+- Assets/Camera/Models/CameraV3.fbx
+- Assets/Camera/Materials/LED_ON.mat
+- Assets/Camera/CameraV3.prefab
+- Assets/Camera/Models/TexCameraV3.png
+- Assets/Camera/CameraAnimator.controller
+- Assets/Camera/RenderTexture.renderTexture
+- Assets/Camera/Materials/LED_OFF.mat
+Dependencies: []

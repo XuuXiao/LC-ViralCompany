@@ -1,36 +1,27 @@
 ﻿using Dissonance;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using ViralCompany.Recording.Encoding;
 using ViralCompany.Recording.Video;
 
 namespace ViralCompany.Recording.Audio;
 internal class AudioRecorder : MonoBehaviour
 {
-
-
     internal static AudioRecorder Instance;
+    private WavWriter wavWriter;
+    private LocalPlayerMicRecorder micRecorder;
 
-
-    WavWriter wavWriter;
-    LocalPlayerMicRecorder micRecorder;
-
-    void Awake()
+    private void Awake()
     {
         Instance = this;
         micRecorder = new LocalPlayerMicRecorder();
         FindObjectOfType<DissonanceComms>().SubscribeToRecordedAudio(micRecorder);
     }
 
-    void OnDisable()
+    private void OnDestroy()
     {
         Instance = null;
-        FindObjectOfType<DissonanceComms>().UnsubscribeFromRecordedAudio(micRecorder);
+        FindObjectOfType<DissonanceComms>().UnsubscribeFromRecordedAudio(micRecorder); // TODO: this errors, unsubscribe before leaving ig?
     }
 
     internal void StopRecording()
@@ -39,7 +30,9 @@ internal class AudioRecorder : MonoBehaviour
         wavWriter.Close();
         wavWriter = null;
     }
-    internal void Flush() {
+
+    internal void Flush()
+    {
         wavWriter.Flush();
         micRecorder.Flush();
     }
@@ -50,7 +43,7 @@ internal class AudioRecorder : MonoBehaviour
         micRecorder.StartRecording(clip);
     }
 
-    void OnAudioFilterRead(float[] data, int channels)
+    private void OnAudioFilterRead(float[] data, int channels)
     {
         if (wavWriter != null)
         {

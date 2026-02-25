@@ -1,0 +1,33 @@
+ManifestFileVersion: 0
+CRC: 1622350844
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9b32cc93fc44ce4889fa6900c9118e47
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4630c63f79d63f962f7b09dde7a2e4fc
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 9b32cc93fc44ce4889fa6900c9118e47
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+- Class: 114
+  Script: {fileID: 1626252479, guid: f99285952e59b614cacb9ba5ddeb17df, type: 3}
+- Class: 114
+  Script: {fileID: -1097792660, guid: ff85a20c8655dd24e9fce311d21362ba, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: com.github.teamxiaolan.dawnlib.dusk
+  ClassName: Dusk.AssetBundleData
+Assets:
+- Assets/ViralCompanyContentContainer.asset
+- Assets/UploaderPrefab.prefab
+Dependencies: []

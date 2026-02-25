@@ -23,13 +23,13 @@ MonoBehaviour:
   holdButtonUse: 0
   itemSpawnsOnGround: 1
   isConductiveMetal: 0
-  isScrap: 1
+  isScrap: 0
   creditsWorth: 0
   lockedInDemo: 0
   highestSalePercentage: 50
-  maxValue: 200
-  minValue: 100
-  spawnPrefab: {fileID: 4411715277210552296, guid: 09eefe3d2d42aaa48aac2f41f13198ad,
+  maxValue: 0
+  minValue: 0
+  spawnPrefab: {fileID: 1123886907935756524, guid: 09eefe3d2d42aaa48aac2f41f13198ad,
     type: 3}
   requiresBattery: 1
   batteryUsage: 100
@@ -45,9 +45,9 @@ MonoBehaviour:
   pocketSFX: {fileID: 0}
   throwSFX: {fileID: 0}
   syncGrabFunction: 1
-  syncUseFunction: 1
+  syncUseFunction: 0
   syncDiscardFunction: 1
-  syncInteractLRFunction: 1
+  syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0
   toolTips: []

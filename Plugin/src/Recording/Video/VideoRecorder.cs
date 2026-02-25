@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Unity.Netcode;
-using UnityEngine.Animations.Rigging;
 using ViralCompany.Recording.Audio;
 using ViralCompany.Util;
 
@@ -32,8 +28,7 @@ internal class VideoRecorder
 
     public VideoRecorder(string videoID)
     {
-        if(Plugin.ModConfig.ExtendedLogging.Value)
-            Plugin.Logger.LogDebug("new VideoRecorder! videoid: " + videoID);
+        Plugin.Logger.LogDebug("new VideoRecorder! videoid: " + videoID);
         Video = new RecordedVideo(videoID);
     }
 
@@ -45,9 +40,13 @@ internal class VideoRecorder
 
     public void EndClip()
     {
+        if (CurrentClip == null)
+            return;
+
         AudioRecorder.Instance.StopRecording();
         Video.RegisterClip(CurrentClip.ClipID);
         Video.StoreClip(CurrentClip.ClipID, CurrentClip);
-        CurrentClip.ClipFinished();
+        CurrentClip.StartEncoding();
+        CurrentClip = null;
     }
 }

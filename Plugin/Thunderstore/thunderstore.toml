@@ -10,8 +10,8 @@ websiteUrl = "https://github.com/XuXiaolan/ViralCompany"
 containsNsfwContent = false
 [package.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
-Evaisa-LethalLib = "0.15.0"
-Rune580-LethalCompany_InputUtils = "0.7.3"
+TeamXiaolan-DawnLib = "0.8.6"
+Rune580-LethalCompany_InputUtils = "0.7.12"
 dotnet_lethal_company-FFMpegCore = "5.1.1"
 Lordfirespeed-YoutubeDLSharp = "1.1.0"
 
@@ -25,8 +25,12 @@ source = "../bin/Release/netstandard2.1/ViralCompany.dll"
 target = "plugins/ViralCompany/"
 
 [[build.copy]]
-source = "../../UnityProject/AssetBundles/StandaloneWindows/viralcompanyasset"
-target = "plugins/ViralCompany/"
+source = "../../UnityProject/AssetBundles/StandaloneWindows/viralcompanyassets"
+target = "plugins/ViralCompany/Assets/"
+
+[[build.copy]]
+source = "../../UnityProject/AssetBundles/StandaloneWindows/viralcameraassets"
+target = "plugins/ViralCompany/Assets/"
 
 [[build.copy]]
 source = "./CHANGELOG.md"

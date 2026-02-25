@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 466683445, guid: ff85a20c8655dd24e9fce311d21362ba, type: 3}
+  m_Name: CameraItemDefinition
+  m_EditorClassIdentifier: 
+  _configEntries: []
+  _tags: []
+  <Key>k__BackingField:
+    _namespace: viral_company
+    _key: camera
+  <Item>k__BackingField: {fileID: 11400000, guid: 561bed460eab8a7458ac09033ce39e9d,
+    type: 2}
+  <ShopItemPreset>k__BackingField:
+    <OrderRequestNode>k__BackingField: {fileID: 0}
+    <OrderReceiptNode>k__BackingField: {fileID: 0}
+    <ItemInfoNode>k__BackingField: {fileID: 0}
+  <TerminalPredicate>k__BackingField: {fileID: 0}
+  <PricingStrategy>k__BackingField: {fileID: 0}
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <IsScrap>k__BackingField: 0
+  <GenerateScrapConfig>k__BackingField: 1
+  <IsShopItem>k__BackingField: 1
+  <GenerateShopItemConfig>k__BackingField: 0
+  <Cost>k__BackingField: 30
+  <GenerateDisableUnlockConfig>k__BackingField: 0
+  <GenerateDisablePricingStrategyConfig>k__BackingField: 0
+  <MoonSpawnWeights>k__BackingField: 
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEngine;
 
 namespace ViralCompany.Recording.Encoding;
@@ -10,7 +9,6 @@ internal class WavWriter
     private int bufferSize;
     private int numBuffers;
     private int outputRate = 44100;
-    private string fileName;
     private int headerSize = 44; // default for uncompressed wav
 
     private FileStream fileStream;
@@ -19,12 +17,11 @@ internal class WavWriter
 
     internal WavWriter(string path)
     {
-
         outputRate = AudioSettings.outputSampleRate;
         AudioSettings.GetDSPBufferSize(out bufferSize, out numBuffers);
 
         fileStream = new FileStream(path, FileMode.Create);
-        byte emptyByte = new byte();
+        byte emptyByte = new();
 
         for (int i = 0; i < headerSize; i++) // preparing the header
         {
@@ -87,8 +84,12 @@ internal class WavWriter
         buffer.AddRange(bytesData);
     }
 
-    internal void Flush() {
-        byte[] data = [.. buffer];
+    internal void Flush()
+    {
+        Plugin.Logger.LogDebug($"Flushing {buffer.Count} bytes");
+        byte[] data = new byte[buffer.Count];
+        buffer.CopyTo(data, 0); // TODO: figure out why this errors with destArgumentException: Destination array was not long enough. Check destIndex and length, and the array's lower bounds
+                                // Parameter name: destinationArray
         fileStream.Write(data, 0, data.Length);
         buffer.Clear();
     }

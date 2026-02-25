@@ -1,8 +1,6 @@
 ﻿using FFMpegCore.Pipes;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -22,13 +20,13 @@ internal class Texture2DVideoFrame(Texture2D texture) : IVideoFrame
 
     public void Serialize(Stream stream)
     {
-        var data = Source.GetRawTextureData();
+        byte[] data = Source.GetRawTextureData();
         stream.Write(data, 0, data.Length);
     }
 
     public async Task SerializeAsync(Stream stream, CancellationToken token)
     {
-        var data = Source.GetRawTextureData();
+        byte[] data = Source.GetRawTextureData();
         await stream.WriteAsync(data, 0, data.Length, token).ConfigureAwait(false);
     }
 
